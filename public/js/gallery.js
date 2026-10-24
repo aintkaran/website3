@@ -398,8 +398,9 @@ function wire(items, figs, restyle) {
       kick();
     }
   }, { passive: false });
-  document.addEventListener('touchend', endDrag);
-  document.addEventListener('touchcancel', endDrag);
+  /* Lazy wrappers: endDrag is declared further below (const, TDZ). */
+  document.addEventListener('touchend', () => endDrag());
+  document.addEventListener('touchcancel', () => endDrag());
   document.addEventListener('pointermove', e => {
     if (!down || !down.touch || e.pointerId !== down.id) return;
     const dx = e.clientX - down.x, dy = e.clientY - down.y;
