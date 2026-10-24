@@ -209,6 +209,8 @@ body {
   line-height: 1.45;
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
+  touch-action: none; /* the page never scrolls natively; gallery.js turns
+                         touch drags anywhere on screen into strip travel */
 }
 
 a { color: inherit; text-decoration: none; }
@@ -229,9 +231,9 @@ a:focus-visible, button:focus-visible {
 .corner-tl { top: 0; left: 0; }
 .corner-tr {
   top: 0; right: 0; text-align: right;
-  /* Same position at every window width: the first line always sits level with
-     the site name. Narrow windows give the bio a narrower column (it wraps
-     onto more lines) instead of moving it down. */
+  /* Desktop: the bio's first line sits level with the site name and wraps in
+     a narrower column as the window shrinks. On small screens it drops to
+     its own full-width line (see the mobile block below). */
   max-width: min(46ch, calc(100vw - 2 * var(--pad) - 110px));
 }
 
@@ -252,7 +254,8 @@ a:focus-visible, button:focus-visible {
   scrollbar-width: none;
   -ms-overflow-style: none;
   cursor: grab;
-  touch-action: pan-y; /* horizontal swipes drive the strip natively */
+  touch-action: none; /* every touch drag is handled in gallery.js (swipe up
+                         scrolls the strip, same glide as the wheel) */
   outline: none; /* mouse-driven strip: a focus ring here paints 1px lines
                     across the page in Safari after zoom - arrows work globally */
 }
@@ -282,6 +285,8 @@ a:focus-visible, button:focus-visible {
   display: block;
   user-select: none;
   -webkit-user-drag: none;
+  -webkit-touch-callout: none; /* long-press save-image menu must not
+                                  interrupt a strip drag on iOS */
   cursor: zoom-in;
 }
 
@@ -333,6 +338,7 @@ dialog#zoom {
   max-height: 100dvh;
   padding: 5vh 5vw;
   cursor: zoom-out;
+  touch-action: pinch-zoom; /* body's none would otherwise block zooming the photo */
 }
 dialog#zoom::backdrop { background: var(--bg); }
 dialog#zoom picture { display: block; width: 100%; height: 100%; }
@@ -341,10 +347,31 @@ dialog#zoom img { width: 100%; height: 100%; object-fit: contain; }
 /* ---- Mobile ---- */
 @media (max-width: 640px) {
   :root { --img-h: 40vh; --img-w: 62vw; --gap: 40px; }
+
+  /* Header: the site name keeps the top-left corner; the bio moves to its
+     own line below it and spans the full viewport width, right aligned. */
+  .corner-tr {
+    top: 19px; /* one title line-height below the site name */
+    left: 0;
+    right: 0;
+    max-width: none;
+  }
+
+  /* Footer: the copyright keeps its own left-aligned line; contact (Email,
+     Text) and the socials each get their own line, both right aligned. */
   .site-footer { flex-wrap: wrap; row-gap: 4px; }
+  .foot-left { flex: 0 0 100%; }
+  .foot-right {
+    flex: 0 0 100%;
+    margin-left: 0;
+    flex-direction: column;
+    align-items: flex-end;
+    row-gap: 4px;
+  }
+  .contact, .socials { justify-content: flex-end; }
 }
 
 /* ---- Reduced motion: plain horizontal scrolling, no easing script ---- */
 @media (prefers-reduced-motion: reduce) {
   * { scroll-behavior: auto !important; }
-          }
+}
