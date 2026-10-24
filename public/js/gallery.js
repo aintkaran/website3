@@ -347,6 +347,7 @@ function wire(items, figs, restyle) {
     target = vp.scrollLeft;
     down = { x: e.clientX, y: e.clientY, s: vp.scrollLeft, t0: vp.scrollLeft, id: e.pointerId };
     moved = 0;
+    suppressClick = false;
   });
 
   /* Touch: a drag ANYWHERE on the page drives the strip, like the wheel.
@@ -361,8 +362,44 @@ function wire(items, figs, restyle) {
     target = vp.scrollLeft;
     down = { x: e.clientX, y: e.clientY, s: vp.scrollLeft, t0: vp.scrollLeft, id: e.pointerId, touch: true };
     moved = 0;
+    suppressClick = false;
     vp.dataset.touched = '1';
   }, { passive: true });
+
+  /* Native touch events mirror the pointer path above: every iOS version
+     fires them, even where pointer events misbehave. When both fire (modern
+     iOS: pointerdown then touchstart) the touch path takes over (its anchor
+     replaces the pointer one) and the pointermove handler then ignores the
+     gesture (id mismatch) - both compute the same destination anyway.
+     preventDefault on the move stops old Safari, which has no touch-action
+     support, from also panning natively. Two-finger gestures (pinch) are
+     left to the browser. */
+  document.addEventListener('touchstart', e => {
+    if (dlg.open || e.touches.length !== 1) return;
+    const t = e.touches[0];
+    stop();
+    target = vp.scrollLeft;
+    down = { x: t.clientX, y: t.clientY, s: vp.scrollLeft, t0: vp.scrollLeft, id: 'touch', touch: true };
+    moved = 0;
+    suppressClick = false;
+    vp.dataset.touched = '1';
+  }, { passive: true });
+  document.addEventListener('touchmove', e => {
+    if (!down || down.id !== 'touch') return;
+    if (e.touches.length !== 1) { endDrag(); return; }
+    const t = e.touches[0];
+    const dx = t.clientX - down.x, dy = t.clientY - down.y;
+    moved = Math.max(moved, Math.abs(dx), Math.abs(dy));
+    if (moved > 4) {
+      e.preventDefault();
+      vp.classList.add('drag');
+      const d = Math.abs(dy) > Math.abs(dx) ? dy : dx;
+      target = clamp(down.t0 - d);
+      kick();
+    }
+  }, { passive: false });
+  document.addEventListener('touchend', endDrag);
+  document.addEventListener('touchcancel', endDrag);
   document.addEventListener('pointermove', e => {
     if (!down || !down.touch || e.pointerId !== down.id) return;
     const dx = e.clientX - down.x, dy = e.clientY - down.y;
@@ -399,7 +436,7 @@ function wire(items, figs, restyle) {
     const id = down.id;
     down = null;
     if (moved > 4) suppressClick = true;
-    if (vp.hasPointerCapture(id)) vp.releasePointerCapture(id);
+    if (id !== 'touch' && vp.hasPointerCapture(id)) vp.releasePointerCapture(id);
     vp.classList.remove('drag');
   };
   vp.addEventListener('pointerup', endDrag);
