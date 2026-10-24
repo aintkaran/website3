@@ -1,17 +1,175 @@
 /*
  * aintkaran - portfolio landing page
- * Monochrome. Image-first. All information in the corners.
+ * Flexoki. Image-first. All information in the corners.
  * Fonts: css/fonts.css. Captions: css/caption.css.
  */
 
+/* Flexoki colour library, one for one (MIT, stephango.com/flexoki).
+   Light = paper/black with 600 accents, dark = black/base-200 with 400
+   accents, per the Flexoki spec. Follows the system setting; no script,
+   so no flash. Links use Flexoki blue (bl). Photos are never tinted. */
 :root {
-  /* Colours: Flexoki neutrals (MIT, stephango.com/flexoki). Light = paper/black/600,
-     dark = black/200/500. Follows the system setting; no script, so no flash.
-     Photos are never tinted. */
   color-scheme: light dark;
-  --bg: #FFFCF0;
-  --ink: #100F0F;
-  --ink-soft: #6F6E69;
+
+  /* Base */
+  --flexoki-black: #100F0F;
+  --flexoki-base-950: #1C1B1A;
+  --flexoki-base-900: #282726;
+  --flexoki-base-850: #343331;
+  --flexoki-base-800: #403E3C;
+  --flexoki-base-700: #575653;
+  --flexoki-base-600: #6F6E69;
+  --flexoki-base-500: #878580;
+  --flexoki-base-400: #9F9D96;
+  --flexoki-base-300: #B7B5AC;
+  --flexoki-base-200: #CECDC3;
+  --flexoki-base-150: #DAD8CE;
+  --flexoki-base-100: #E6E4D9;
+  --flexoki-base-50: #F2F0E5;
+  --flexoki-paper: #FFFCF0;
+
+  /* Red */
+  --flexoki-red-50: #FFE1D5;
+  --flexoki-red-100: #FFCABB;
+  --flexoki-red-150: #FDB2A2;
+  --flexoki-red-200: #F89A8A;
+  --flexoki-red-300: #E8705F;
+  --flexoki-red-400: #D14D41;
+  --flexoki-red-500: #C03E35;
+  --flexoki-red-600: #AF3029;
+  --flexoki-red-700: #942822;
+  --flexoki-red-800: #6C201C;
+  --flexoki-red-850: #551B18;
+  --flexoki-red-900: #3E1715;
+  --flexoki-red-950: #261312;
+
+  /* Orange */
+  --flexoki-orange-50: #FFE7CE;
+  --flexoki-orange-100: #FED3AF;
+  --flexoki-orange-150: #FCC192;
+  --flexoki-orange-200: #F9AE77;
+  --flexoki-orange-300: #EC8B49;
+  --flexoki-orange-400: #DA702C;
+  --flexoki-orange-500: #CB6120;
+  --flexoki-orange-600: #BC5215;
+  --flexoki-orange-700: #9D4310;
+  --flexoki-orange-800: #71320D;
+  --flexoki-orange-850: #59290D;
+  --flexoki-orange-900: #40200D;
+  --flexoki-orange-950: #27180E;
+
+  /* Yellow */
+  --flexoki-yellow-50: #FAEEC6;
+  --flexoki-yellow-100: #F6E2A0;
+  --flexoki-yellow-150: #F1D67E;
+  --flexoki-yellow-200: #ECCB60;
+  --flexoki-yellow-300: #DFB431;
+  --flexoki-yellow-400: #D0A215;
+  --flexoki-yellow-500: #BE9207;
+  --flexoki-yellow-600: #AD8301;
+  --flexoki-yellow-700: #8E6B01;
+  --flexoki-yellow-800: #664D01;
+  --flexoki-yellow-850: #503D02;
+  --flexoki-yellow-900: #3A2D04;
+  --flexoki-yellow-950: #241E08;
+
+  /* Green */
+  --flexoki-green-50: #EDEECF;
+  --flexoki-green-100: #DDE2B2;
+  --flexoki-green-150: #CDD597;
+  --flexoki-green-200: #BEC97E;
+  --flexoki-green-300: #A0AF54;
+  --flexoki-green-400: #879A39;
+  --flexoki-green-500: #768D21;
+  --flexoki-green-600: #66800B;
+  --flexoki-green-700: #536907;
+  --flexoki-green-800: #3D4C07;
+  --flexoki-green-850: #313D07;
+  --flexoki-green-900: #252D09;
+  --flexoki-green-950: #1A1E0C;
+
+  /* Cyan */
+  --flexoki-cyan-50: #DDF1E4;
+  --flexoki-cyan-100: #BFE8D9;
+  --flexoki-cyan-150: #A2DECE;
+  --flexoki-cyan-200: #87D3C3;
+  --flexoki-cyan-300: #5ABDAC;
+  --flexoki-cyan-400: #3AA99F;
+  --flexoki-cyan-500: #2F968D;
+  --flexoki-cyan-600: #24837B;
+  --flexoki-cyan-700: #1C6C66;
+  --flexoki-cyan-800: #164F4A;
+  --flexoki-cyan-850: #143F3C;
+  --flexoki-cyan-900: #122F2C;
+  --flexoki-cyan-950: #101F1D;
+
+  /* Blue */
+  --flexoki-blue-50: #E1ECEB;
+  --flexoki-blue-100: #C6DDE8;
+  --flexoki-blue-150: #ABCFE2;
+  --flexoki-blue-200: #92BFDB;
+  --flexoki-blue-300: #66A0C8;
+  --flexoki-blue-400: #4385BE;
+  --flexoki-blue-500: #3171B2;
+  --flexoki-blue-600: #205EA6;
+  --flexoki-blue-700: #1A4F8C;
+  --flexoki-blue-800: #163B66;
+  --flexoki-blue-850: #133051;
+  --flexoki-blue-900: #12253B;
+  --flexoki-blue-950: #101A24;
+
+  /* Purple */
+  --flexoki-purple-50: #F0EAEC;
+  --flexoki-purple-100: #E2D9E9;
+  --flexoki-purple-150: #D3CAE6;
+  --flexoki-purple-200: #C4B9E0;
+  --flexoki-purple-300: #A699D0;
+  --flexoki-purple-400: #8B7EC8;
+  --flexoki-purple-500: #735EB5;
+  --flexoki-purple-600: #5E409D;
+  --flexoki-purple-700: #4F3685;
+  --flexoki-purple-800: #3C2A62;
+  --flexoki-purple-850: #31234E;
+  --flexoki-purple-900: #261C39;
+  --flexoki-purple-950: #1A1623;
+
+  /* Magenta */
+  --flexoki-magenta-50: #FEE4E5;
+  --flexoki-magenta-100: #FCCFDA;
+  --flexoki-magenta-150: #F9B9CF;
+  --flexoki-magenta-200: #F4A4C2;
+  --flexoki-magenta-300: #E47DA8;
+  --flexoki-magenta-400: #CE5D97;
+  --flexoki-magenta-500: #B74583;
+  --flexoki-magenta-600: #A02F6F;
+  --flexoki-magenta-700: #87285E;
+  --flexoki-magenta-800: #641F46;
+  --flexoki-magenta-850: #4F1B39;
+  --flexoki-magenta-900: #39172B;
+  --flexoki-magenta-950: #24131D;
+
+  /* Theme mapping (Flexoki spec): bg surfaces, ui borders/hover, tx text */
+  --bg: var(--flexoki-paper);
+  --bg-2: var(--flexoki-base-50);
+  --ui: var(--flexoki-base-100);
+  --ui-2: var(--flexoki-base-150);
+  --ui-3: var(--flexoki-base-200);
+  --tx-3: var(--flexoki-base-300);
+  --tx-2: var(--flexoki-base-600);
+  --tx: var(--flexoki-black);
+
+  /* Accents for this theme */
+  --re: var(--flexoki-red-600);
+  --or: var(--flexoki-orange-600);
+  --ye: var(--flexoki-yellow-600);
+  --gr: var(--flexoki-green-600);
+  --cy: var(--flexoki-cyan-600);
+  --bl: var(--flexoki-blue-600);
+  --pu: var(--flexoki-purple-600);
+  --ma: var(--flexoki-magenta-600);
+
+  --link: var(--bl); /* links are Flexoki blue */
+
   --font-body: 'ABC Areal', Arial, Helvetica, sans-serif;
   --font-mono: 'ABC Areal', 'Courier New', monospace;
   --pad: clamp(16px, 3vw, 40px);
@@ -22,9 +180,23 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #100F0F;
-    --ink: #CECDC3;
-    --ink-soft: #878580;
+    --bg: var(--flexoki-black);
+    --bg-2: var(--flexoki-base-950);
+    --ui: var(--flexoki-base-900);
+    --ui-2: var(--flexoki-base-850);
+    --ui-3: var(--flexoki-base-800);
+    --tx-3: var(--flexoki-base-700);
+    --tx-2: var(--flexoki-base-500);
+    --tx: var(--flexoki-base-200);
+
+    --re: var(--flexoki-red-400);
+    --or: var(--flexoki-orange-400);
+    --ye: var(--flexoki-yellow-400);
+    --gr: var(--flexoki-green-400);
+    --cy: var(--flexoki-cyan-400);
+    --bl: var(--flexoki-blue-400);
+    --pu: var(--flexoki-purple-400);
+    --ma: var(--flexoki-magenta-400);
   }
 }
 
@@ -33,7 +205,7 @@ html, body { height: 100%; }
 
 body {
   background: var(--bg);
-  color: var(--ink);
+  color: var(--tx);
   font-family: var(--font-body);
   font-size: 13px;
   line-height: 1.45;
@@ -41,10 +213,10 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-a { color: inherit; text-decoration: none; }
+a { color: var(--link); text-decoration: none; }
 a:hover { text-decoration: underline; }
 a:focus-visible, button:focus-visible {
-  outline: 1px solid var(--ink);
+  outline: 1px solid var(--tx);
   outline-offset: 3px;
 }
 
@@ -69,7 +241,7 @@ a:focus-visible, button:focus-visible {
    element, corners to captions to footer, is 13px / weight 400. The top
    corners share a line-height, so their first baselines align. */
 .site-title { font-size: 13px; font-weight: 400; letter-spacing: 0.01em; line-height: 19px; }
-.bio { line-height: 19px; color: var(--ink-soft); }
+.bio { line-height: 19px; color: var(--tx-2); }
 .bio a { text-decoration: underline; text-underline-offset: 2px; }
 
 /* ---- Gallery: the hero. Images own the middle of the screen. ---- */
@@ -129,7 +301,7 @@ a:focus-visible, button:focus-visible {
   pointer-events: none;
 }
 .now-showing .caption { margin-top: 2px; }
-.now-showing .credit { color: var(--ink-soft); }
+.now-showing .credit { color: var(--tx-2); }
 
 /* ---- Footer: slim, quiet. Copyright left; contact + socials grouped on
    the right with a wider gap between the two groups. ---- */
@@ -142,7 +314,7 @@ a:focus-visible, button:focus-visible {
   align-items: baseline;
   gap: 16px;
   padding: 10px var(--pad);
-  color: var(--ink-soft);
+  color: var(--tx-2);
 }
 .foot-left { white-space: nowrap; }
 .loc { margin-left: 8px; }
