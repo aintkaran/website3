@@ -1,0 +1,6 @@
+# Originals / RAW / full-resolution files never go in the repo
+/originals/
+node_modules/
+.vercel/
+.DS_Store
+Thumbs.db

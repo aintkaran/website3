@@ -1,0 +1,33 @@
+{
+  "outputDirectory": "public",
+  "cleanUrls": true,
+  "headers": [
+    {
+      "source": "/assets/projects/(.*)/web/(.*)\\.(webp|avif|jpg|jxl)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/assets/projects/(.*)/web/(.*)\\.jxl",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "image/jxl"
+        }
+      ]
+    },
+    {
+      "source": "/assets/fonts/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
+}

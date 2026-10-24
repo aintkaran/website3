@@ -1,0 +1,18 @@
+{
+  "name": "aintkaran",
+  "bio": "Karan Agrawal currently works at Vitamin Studios",
+  "bioLink": { "text": "Vitamin Studios", "url": "https://www.vitaminstudios.in" },
+  "location": "",
+  "year": "2026",
+  "copyright": "© aintKaran | 2026",
+  "contact": [
+    { "label": "Email", "url": "mailto:aintkaran@icloud.com" },
+    { "label": "Text", "url": "sms:+917367010240" }
+  ],
+  "social": [
+    { "label": "Instagram", "url": "https://instagram.com/aintkaran" },
+    { "label": "Pinterest", "url": "https://www.pinterest.com/aintkaran" },
+    { "label": "LinkedIn", "url": "https://www.linkedin.com/in/aintkaran" },
+    { "label": "X", "url": "https://x.com/aintkaran" }
+  ]
+}

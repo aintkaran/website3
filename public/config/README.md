@@ -1,0 +1,6 @@
+# Site text and links
+
+**site.json** is the one file to edit for anything written on the page:
+bio, copyright, location, the Email / Text contact links and the footer
+social links (in display order). Press the pencil icon to edit; every
+commit to `main` republishes the site automatically.

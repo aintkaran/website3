@@ -1,0 +1,11 @@
+{
+  "name": "aintkaran-portfolio",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "npx serve public"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

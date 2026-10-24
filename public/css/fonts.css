@@ -1,0 +1,16 @@
+/*
+ * ABC Areal Superfamily Variable (Dinamo, free license covering web use):
+ * https://abcdinamo.com/typefaces/areal
+ * One variable file carries the whole superfamily:
+ *   wght 400-700 | MONO 0-100 (0 = proportional, 50 = Semi Mono, 100 = Mono)
+ *   slnt 0 to -12 (italics) | DRKM 0-1 (darkmode)
+ * Served as shipped by the foundry - do not modify, convert or rename.
+ * Fallback is Arial, which Areal revives - the layout does not change.
+ */
+@font-face {
+  font-family: 'ABC Areal';
+  src: url('../assets/fonts/ABCArealSuperfamilyVariable.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}

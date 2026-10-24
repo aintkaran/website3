@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>aintkaran</title>
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFCF0">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#100F0F">
+<meta name="description" content="Portfolio of Karan A (aintkaran).">
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/caption.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Page information sits in the corners; the images own the middle. -->
+  <header class="corner corner-tl">
+    <h1 class="site-title">aintkaran</h1>
+  </header>
+
+  <div class="corner corner-tr">
+    <p id="bio" class="bio"></p>
+  </div>
+
+  <main class="stage">
+    <section id="viewport" class="viewport" tabindex="0" aria-label="Image gallery. Scroll or use arrow keys.">
+      <div id="track" class="track"></div>
+    </section>
+    <!-- One static title + caption, centred directly under the focused image. -->
+    <div id="nowshowing" class="now-showing" aria-live="polite">
+      <p id="title" class="now-title"></p>
+      <p id="caption" class="caption"></p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <span class="foot-left">
+      <span id="copyright" class="copyright"></span>
+      <span id="loc" class="loc"></span>
+    </span>
+    <div class="foot-right">
+      <nav id="contact" class="contact" aria-label="Contact"></nav>
+      <nav id="socials" class="socials" aria-label="Social links"></nav>
+    </div>
+  </footer>
+
+  <dialog id="zoom" aria-label="Enlarged photo. Click or press Escape to close."><picture><source id="zoomsource" type="image/jxl"><img id="zoomimg" alt=""></picture></dialog>
+
+  <script src="js/gallery.js" defer></script>
+  <!-- Vercel Speed Insights (plain-HTML integration; served by Vercel on deploy) -->
+  <script>
+    window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+  <!-- Vercel Web Analytics (plain-HTML integration: no package needed; script served by Vercel once Analytics is enabled for the project) -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
