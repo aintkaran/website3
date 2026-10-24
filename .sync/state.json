@@ -1,0 +1,214 @@
+{
+  "version": 1,
+  "settings": {
+    "widths": [
+      600,
+      1200,
+      2400
+    ],
+    "webpQuality": 82,
+    "jxlQuality": 80,
+    "jxlEffort": 4,
+    "v": 1
+  },
+  "projects": {
+    "Monroe": {
+      "IMG_0985": {
+        "sha256": "67c16741015d804a3c8c7b68460e6ee0fb48fdf42d61778a7dc8522ecad114f0",
+        "width": 1200,
+        "height": 1800,
+        "sizes": [
+          600,
+          1200
+        ],
+        "jxlSizes": [
+          600,
+          1200
+        ],
+        "exif": {}
+      },
+      "IMG_1448": {
+        "sha256": "d2f2bd1c12246c532d2e21b729defa0723df7d5223e2bfa7ef838f0338b3b01b",
+        "width": 1200,
+        "height": 800,
+        "sizes": [
+          600,
+          1200
+        ],
+        "jxlSizes": [
+          600,
+          1200
+        ],
+        "exif": {}
+      },
+      "IMG_2283": {
+        "sha256": "774e593e210609e7cb1fb21ea518b0542f9f045e2f124a861db6a1d7e0149c37",
+        "width": 2400,
+        "height": 1600,
+        "sizes": [
+          600,
+          1200,
+          2400
+        ],
+        "jxlSizes": [
+          600,
+          1200,
+          2400
+        ],
+        "exif": {}
+      },
+      "IMG_3084": {
+        "sha256": "07b6b4ceb78f0af6eb1661fcbd235ed08a54a298f7d4af5c809226f8507d58de",
+        "width": 1200,
+        "height": 1800,
+        "sizes": [
+          600,
+          1200
+        ],
+        "jxlSizes": [
+          600,
+          1200
+        ],
+        "exif": {}
+      },
+      "IMG_3935": {
+        "sha256": "e13f1143bfc2d3092cd90858537713a01cd13c3170f94e090476cbf34ad29e79",
+        "width": 1200,
+        "height": 1800,
+        "sizes": [
+          600,
+          1200
+        ],
+        "jxlSizes": [
+          600,
+          1200
+        ],
+        "exif": {}
+      },
+      "IMG_6583": {
+        "sha256": "8bda785f4091447377f95e08acdca95bb1280df31725ea870e532a4573d5149c",
+        "width": 1200,
+        "height": 800,
+        "sizes": [
+          600,
+          1200
+        ],
+        "jxlSizes": [
+          600,
+          1200
+        ],
+        "exif": {}
+      },
+      "IMG_7166": {
+        "sha256": "7752f0a46bb1f55288f19a92b0eb303d4693579c73976bfc02ab0971828ae02a",
+        "width": 1200,
+        "height": 1800,
+        "sizes": [
+          600,
+          1200
+        ],
+        "jxlSizes": [
+          600,
+          1200
+        ],
+        "exif": {}
+      },
+      "IMG_9599": {
+        "sha256": "406716f8613626be43c2d06226d9861b9683d7f13a1816e78a243869e953115c",
+        "width": 1200,
+        "height": 1800,
+        "sizes": [
+          600,
+          1200
+        ],
+        "jxlSizes": [
+          600,
+          1200
+        ],
+        "exif": {}
+      }
+    },
+    "test": {
+      "IMG_1024": {
+        "sha256": "00571555853bedd53ef27dce6328b33e4172ed7c0715f1a742f9a6cb8ccf188c",
+        "width": 2400,
+        "height": 3600,
+        "sizes": [
+          600,
+          1200,
+          2400
+        ],
+        "jxlSizes": [
+          600,
+          1200,
+          2400
+        ],
+        "exif": {}
+      },
+      "IMG_1025": {
+        "sha256": "5f8f520106c5910b003a2206fed0294bb779d71a3e23c4b8d808d19c43763de4",
+        "width": 2400,
+        "height": 1678,
+        "sizes": [
+          600,
+          1200,
+          2400
+        ],
+        "jxlSizes": [
+          600,
+          1200,
+          2400
+        ],
+        "exif": {}
+      },
+      "IMG_1028": {
+        "sha256": "bd83483b3e97e41fb4b043b9aecac9576293a4a7bcb56a769af7d27d54b563b1",
+        "width": 2400,
+        "height": 1029,
+        "sizes": [
+          600,
+          1200,
+          2400
+        ],
+        "jxlSizes": [
+          600,
+          1200,
+          2400
+        ],
+        "exif": {}
+      }
+    },
+    "test2": {
+      "0M2A6143": {
+        "sha256": "0b573133f1b986d29d78c45c704ebd2ee778a9cafb393370ae91cfe4f791e7b6",
+        "width": 2400,
+        "height": 3600,
+        "sizes": [
+          600,
+          1200,
+          2400
+        ],
+        "jxlSizes": [
+          600,
+          1200,
+          2400
+        ],
+        "exif": {}
+      },
+      "IMG_6506": {
+        "sha256": "a85f4cc546025b4a0b68b8fdc0ecda617d84c188e3d811b558cf4fb977b352fd",
+        "width": 1200,
+        "height": 1800,
+        "sizes": [
+          600,
+          1200
+        ],
+        "jxlSizes": [
+          600,
+          1200
+        ],
+        "exif": {}
+      }
+    }
+  }
+}

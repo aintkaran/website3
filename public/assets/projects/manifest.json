@@ -1,0 +1,306 @@
+[
+  {
+    "slug": "Monroe",
+    "project": "Monroe",
+    "date": "",
+    "images": [
+      {
+        "file": "IMG_0985",
+        "title": "Monroe",
+        "date": "",
+        "width": 1200,
+        "height": 1800,
+        "sizes": [
+          600,
+          1200
+        ],
+        "alt": "",
+        "caption": "",
+        "credit": "",
+        "order": 1,
+        "jxlSizes": [
+          600,
+          1200
+        ],
+        "jxl": true,
+        "jpg": false
+      },
+      {
+        "file": "IMG_7166",
+        "title": "Monroe",
+        "date": "",
+        "width": 1200,
+        "height": 1800,
+        "sizes": [
+          600,
+          1200
+        ],
+        "alt": "",
+        "caption": "",
+        "credit": "",
+        "order": 2,
+        "jxlSizes": [
+          600,
+          1200
+        ],
+        "jxl": true,
+        "jpg": false
+      },
+      {
+        "file": "IMG_3084",
+        "title": "Monroe",
+        "date": "",
+        "width": 1200,
+        "height": 1800,
+        "sizes": [
+          600,
+          1200
+        ],
+        "alt": "",
+        "caption": "",
+        "credit": "",
+        "order": 3,
+        "jxlSizes": [
+          600,
+          1200
+        ],
+        "jxl": true,
+        "jpg": false
+      },
+      {
+        "file": "IMG_3935",
+        "title": "Monroe",
+        "date": "",
+        "width": 1200,
+        "height": 1800,
+        "sizes": [
+          600,
+          1200
+        ],
+        "alt": "",
+        "caption": "",
+        "credit": "",
+        "order": 4,
+        "jxlSizes": [
+          600,
+          1200
+        ],
+        "jxl": true,
+        "jpg": false
+      },
+      {
+        "file": "IMG_2283",
+        "title": "Monroe",
+        "date": "",
+        "width": 2400,
+        "height": 1600,
+        "sizes": [
+          600,
+          1200,
+          2400
+        ],
+        "alt": "",
+        "caption": "",
+        "credit": "",
+        "order": 5,
+        "jxlSizes": [
+          600,
+          1200,
+          2400
+        ],
+        "jxl": true,
+        "jpg": false
+      },
+      {
+        "file": "IMG_1448",
+        "title": "Monroe",
+        "date": "",
+        "width": 1200,
+        "height": 800,
+        "sizes": [
+          600,
+          1200
+        ],
+        "alt": "",
+        "caption": "",
+        "credit": "",
+        "order": 6,
+        "jxlSizes": [
+          600,
+          1200
+        ],
+        "jxl": true,
+        "jpg": false
+      },
+      {
+        "file": "IMG_6583",
+        "title": "Monroe",
+        "date": "",
+        "width": 1200,
+        "height": 800,
+        "sizes": [
+          600,
+          1200
+        ],
+        "alt": "",
+        "caption": "",
+        "credit": "",
+        "order": 7,
+        "jxlSizes": [
+          600,
+          1200
+        ],
+        "jxl": true,
+        "jpg": false
+      },
+      {
+        "file": "IMG_9599",
+        "title": "Monroe",
+        "date": "",
+        "width": 1200,
+        "height": 1800,
+        "sizes": [
+          600,
+          1200
+        ],
+        "alt": "",
+        "caption": "",
+        "credit": "",
+        "order": 8,
+        "jxlSizes": [
+          600,
+          1200
+        ],
+        "jxl": true,
+        "jpg": false
+      }
+    ]
+  },
+  {
+    "slug": "test",
+    "project": "test",
+    "date": "",
+    "images": [
+      {
+        "file": "IMG_1024",
+        "title": "test",
+        "date": "",
+        "width": 2400,
+        "height": 3600,
+        "sizes": [
+          600,
+          1200,
+          2400
+        ],
+        "alt": "Motion-blurred photo of a woman in an orange top and brown skirt walking past green trees and a wooden building, holding a brown hat.",
+        "caption": "Placeholder 1, replace me",
+        "credit": "Placeholder",
+        "order": 999,
+        "jxlSizes": [
+          600,
+          1200,
+          2400
+        ],
+        "jxl": true,
+        "jpg": false
+      },
+      {
+        "file": "IMG_1025",
+        "title": "test",
+        "date": "",
+        "width": 2400,
+        "height": 1678,
+        "sizes": [
+          600,
+          1200,
+          2400
+        ],
+        "alt": "Woman with long dark curly hair in a brown jacket riding a white horse in front of green foliage.",
+        "caption": "Placeholder 1, replace me",
+        "credit": "Placeholder",
+        "order": 999,
+        "jxlSizes": [
+          600,
+          1200,
+          2400
+        ],
+        "jxl": true,
+        "jpg": false
+      },
+      {
+        "file": "IMG_1028",
+        "title": "test",
+        "date": "",
+        "width": 2400,
+        "height": 1029,
+        "sizes": [
+          600,
+          1200,
+          2400
+        ],
+        "alt": "A white horse galloping across red earth in front of a white fence and dark trees.",
+        "caption": "Placeholder 1, replace me",
+        "credit": "Placeholder",
+        "order": 999,
+        "jxlSizes": [
+          600,
+          1200,
+          2400
+        ],
+        "jxl": true,
+        "jpg": false
+      }
+    ]
+  },
+  {
+    "slug": "test2",
+    "project": "test2",
+    "date": "",
+    "images": [
+      {
+        "file": "0M2A6143",
+        "title": "test2",
+        "date": "",
+        "width": 2400,
+        "height": 3600,
+        "sizes": [
+          600,
+          1200,
+          2400
+        ],
+        "alt": "",
+        "caption": "",
+        "credit": "",
+        "order": 1,
+        "jxlSizes": [
+          600,
+          1200,
+          2400
+        ],
+        "jxl": true,
+        "jpg": false
+      },
+      {
+        "file": "IMG_6506",
+        "title": "test2",
+        "date": "",
+        "width": 1200,
+        "height": 1800,
+        "sizes": [
+          600,
+          1200
+        ],
+        "alt": "",
+        "caption": "",
+        "credit": "",
+        "order": 2,
+        "jxlSizes": [
+          600,
+          1200
+        ],
+        "jxl": true,
+        "jpg": false
+      }
+    ]
+  }
+]
