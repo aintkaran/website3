@@ -41,6 +41,9 @@ const el = (t, c, h) => { const e = document.createElement(t); if (c) e.classNam
 const NEIGHBOUR = 0.6; /* scale of every image away from centre */
 const SCROLL_SPEED = 1.0; /* wheel delta multiplier: 1 = native travel per notch of the wheel */
 const GLIDE = 0.16; /* easing step: fraction of the remaining distance per frame */
+const FLING_MIN = 3; /* touch swipe: minimum image slots travelled per gesture */
+const FLING_MAX = 6; /* touch swipe: cap on the post-release float, in image slots */
+const FLING_MS = 280; /* flick velocity (px/ms) times this = extra momentum px */
 const CAPTION_OFFSET = 40; /* px between the bottom of the tallest image and its title */
 
 /* The box an image of pixel size w x h renders in: centred image height vs
@@ -350,12 +353,14 @@ function wire(items, figs, restyle) {
     suppressClick = false;
   });
 
-  /* Touch: a drag ANYWHERE on the page drives the strip, like the wheel.
-     Vertical or horizontal finger travel (whichever dominates) feeds the
-     destination and the same glide follows it, so a gentle swipe up floats
-     the strip exactly like scrolling down with a wheel on desktop. No snap,
-     no fling spring: the strip rests where the gesture ends. body has
-     touch-action: none, so the browser never takes the gesture over. */
+  /* Touch: a HORIZONTAL drag anywhere on the page drives the strip, like
+     the wheel. Vertical swipes stay native - body is touch-action: pan-y,
+     so pull-to-refresh and rubber-banding keep working - and the script
+     never moves the strip for them. On release a horizontal swipe keeps
+     floating: every gesture travels at least FLING_MIN image slots in
+     total (a fast flick goes further, capped at FLING_MAX), eased out by
+     the same GLIDE as the wheel. No snap: the strip never pulls toward an
+     image afterwards. */
   document.addEventListener('pointerdown', e => {
     if (e.pointerType !== 'touch' || !e.isPrimary || dlg.open) return;
     stop();
@@ -371,9 +376,10 @@ function wire(items, figs, restyle) {
      iOS: pointerdown then touchstart) the touch path takes over (its anchor
      replaces the pointer one) and the pointermove handler then ignores the
      gesture (id mismatch) - both compute the same destination anyway.
-     preventDefault on the move stops old Safari, which has no touch-action
-     support, from also panning natively. Two-finger gestures (pinch) are
-     left to the browser. */
+     preventDefault on the move (horizontal gestures only; vertical stays
+     native for pull-to-refresh) stops old Safari, which has no touch-action
+     support, from hijacking a horizontal drag. Two-finger gestures (pinch)
+     are left to the browser. */
   document.addEventListener('touchstart', e => {
     if (dlg.open || e.touches.length !== 1) return;
     const t = e.touches[0];
@@ -384,19 +390,31 @@ function wire(items, figs, restyle) {
     suppressClick = false;
     vp.dataset.touched = '1';
   }, { passive: true });
+  /* Recent drag samples, for flick velocity at release. */
+  const sample = dx => {
+    if (!down) return;
+    (down.sp = down.sp || []).push([performance.now(), dx]);
+    if (down.sp.length > 5) down.sp.shift();
+  };
   document.addEventListener('touchmove', e => {
     if (!down || down.id !== 'touch') return;
     if (e.touches.length !== 1) { endDrag(); return; }
     const t = e.touches[0];
     const dx = t.clientX - down.x, dy = t.clientY - down.y;
     moved = Math.max(moved, Math.abs(dx), Math.abs(dy));
-    if (moved > 4) {
-      e.preventDefault();
-      vp.classList.add('drag');
-      const d = Math.abs(dy) > Math.abs(dx) ? dy : dx;
-      target = clamp(down.t0 - d);
-      kick();
+    /* Axis ownership, decided once past the tap slop: vertical stays
+       native (pull-to-refresh); only horizontal drives the strip. */
+    if (!down.axis) {
+      if (moved <= 8) return;
+      down.axis = Math.abs(dx) >= Math.abs(dy) ? 'h' : 'v';
+      if (down.axis === 'v') { endDrag(); return; }
     }
+    if (down.axis !== 'h') return;
+    e.preventDefault();
+    sample(dx);
+    vp.classList.add('drag');
+    target = clamp(down.t0 - dx);
+    kick();
   }, { passive: false });
   /* Lazy wrappers: endDrag is declared further below (const, TDZ). */
   document.addEventListener('touchend', () => endDrag());
@@ -405,12 +423,16 @@ function wire(items, figs, restyle) {
     if (!down || !down.touch || e.pointerId !== down.id) return;
     const dx = e.clientX - down.x, dy = e.clientY - down.y;
     moved = Math.max(moved, Math.abs(dx), Math.abs(dy));
-    if (moved > 4) {
-      vp.classList.add('drag');
-      const d = Math.abs(dy) > Math.abs(dx) ? dy : dx;
-      target = clamp(down.t0 - d);
-      kick();
+    if (!down.axis) {
+      if (moved <= 8) return;
+      down.axis = Math.abs(dx) >= Math.abs(dy) ? 'h' : 'v';
+      if (down.axis === 'v') { endDrag(); return; }
     }
+    if (down.axis !== 'h') return;
+    sample(dx);
+    vp.classList.add('drag');
+    target = clamp(down.t0 - dx);
+    kick();
   }, { passive: true });
   /* A drag that ends over a link must not activate it. */
   document.addEventListener('click', e => {
@@ -434,11 +456,30 @@ function wire(items, figs, restyle) {
   });
   const endDrag = () => {
     if (!down) return;
-    const id = down.id;
+    const id = down.id, wasTouch = !!down.touch, axis = down.axis, t0 = down.t0, sp = down.sp;
     down = null;
     if (moved > 4) suppressClick = true;
     if (id !== 'touch' && vp.hasPointerCapture(id)) vp.releasePointerCapture(id);
     vp.classList.remove('drag');
+    /* Touch fling, horizontal gestures only: the swipe keeps floating after
+       the finger lifts - at least FLING_MIN image slots of travel in total,
+       more for a fast flick, capped at FLING_MAX slots. The usual GLIDE
+       easing takes the strip there; it never snaps to an image. Mouse
+       drags and vertical touches (native scroll/refresh) are exempt. */
+    if (wasTouch && axis === 'h') {
+      const travel = target - t0;
+      let v = 0;
+      if (sp && sp.length > 1) {
+        const a = sp[0], b = sp[sp.length - 1];
+        if (b[0] > a[0] && performance.now() - b[0] < 90) v = (b[1] - a[1]) / (b[0] - a[0]);
+      }
+      const dir = travel ? Math.sign(travel) : (v ? -Math.sign(v) : 0);
+      if (dir) {
+        const slot = loopW() / N;
+        const extra = Math.min(Math.max(FLING_MIN * slot - Math.abs(travel), Math.abs(v) * FLING_MS), FLING_MAX * slot);
+        if (extra > 0) { target = clamp(target + dir * extra); kick(); }
+      }
+    }
   };
   vp.addEventListener('pointerup', endDrag);
   vp.addEventListener('pointercancel', endDrag);
