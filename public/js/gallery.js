@@ -11,7 +11,9 @@
  * - Motion: wheel/trackpad scrolls horizontally with a light easing glide;
  *   mouse drag, touch swipe, arrow keys. Wheel input maps ~1:1 to travel
  *   (SCROLL_SPEED) and the strip stops exactly where the input stops - no
- *   snap-to-centre, so scrolling stays free-flowing.
+ *   snap-to-centre, so scrolling stays free-flowing. A touch drag anywhere
+ *   on the page (a gentle swipe up works too) feeds the same destination and
+ *   the same glide, so the phone feels exactly like the wheel on desktop.
  * - No snap: the strip rests wherever it is left. Arrow keys still glide to
  *   the next/previous image, and the strip starts on the first image, but
  *   wheel, drag and touch never pull back to a centre.
@@ -192,7 +194,7 @@ function wire(items, figs, restyle) {
      content, so the loop can jump by it without any visible change. */
   let copyWidth = 0;
   const loopW = () => copyWidth;
-  let target = 0, raf = 0, down = null, moved = 0, cur = 0;
+  let target = 0, raf = 0, down = null, moved = 0, cur = 0, suppressClick = false;
   let cs = [], shown = -1, settling = false;
   const measure = () => {
     cs = figs.map(f => f.offsetLeft + f.offsetWidth / 2);
@@ -232,7 +234,7 @@ function wire(items, figs, restyle) {
     if (d) {
       vp.scrollLeft = s + d;
       target += d;
-      if (down) down.s += d;
+      if (down) { down.s += d; down.t0 += d; }
     }
   };
 
@@ -337,18 +339,50 @@ function wire(items, figs, restyle) {
     requestAnimationFrame(() => requestAnimationFrame(() => { settling = false; }));
   });
 
-  /* Pointer drag (mouse and touch). touch-action: pan-y keeps vertical page
-     gestures native; horizontal swipes drive the strip here. The strip stays
+  /* Mouse drag on the strip: direct 1:1 manipulation. The strip stays
      exactly where it is released. */
   vp.addEventListener('pointerdown', e => {
-    if (!e.isPrimary || e.button !== 0) return;
+    if (e.pointerType === 'touch' || !e.isPrimary || e.button !== 0) return;
     stop();
     target = vp.scrollLeft;
-    down = { x: e.clientX, s: vp.scrollLeft, id: e.pointerId };
+    down = { x: e.clientX, y: e.clientY, s: vp.scrollLeft, t0: vp.scrollLeft, id: e.pointerId };
     moved = 0;
   });
+
+  /* Touch: a drag ANYWHERE on the page drives the strip, like the wheel.
+     Vertical or horizontal finger travel (whichever dominates) feeds the
+     destination and the same glide follows it, so a gentle swipe up floats
+     the strip exactly like scrolling down with a wheel on desktop. No snap,
+     no fling spring: the strip rests where the gesture ends. body has
+     touch-action: none, so the browser never takes the gesture over. */
+  document.addEventListener('pointerdown', e => {
+    if (e.pointerType !== 'touch' || !e.isPrimary || dlg.open) return;
+    stop();
+    target = vp.scrollLeft;
+    down = { x: e.clientX, y: e.clientY, s: vp.scrollLeft, t0: vp.scrollLeft, id: e.pointerId, touch: true };
+    moved = 0;
+    vp.dataset.touched = '1';
+  }, { passive: true });
+  document.addEventListener('pointermove', e => {
+    if (!down || !down.touch || e.pointerId !== down.id) return;
+    const dx = e.clientX - down.x, dy = e.clientY - down.y;
+    moved = Math.max(moved, Math.abs(dx), Math.abs(dy));
+    if (moved > 4) {
+      vp.classList.add('drag');
+      const d = Math.abs(dy) > Math.abs(dx) ? dy : dx;
+      target = clamp(down.t0 - d);
+      kick();
+    }
+  }, { passive: true });
+  /* A drag that ends over a link must not activate it. */
+  document.addEventListener('click', e => {
+    if (!suppressClick) return;
+    suppressClick = false;
+    e.preventDefault();
+    e.stopPropagation();
+  }, true);
   vp.addEventListener('pointermove', e => {
-    if (!down || e.pointerId !== down.id) return;
+    if (!down || down.touch || e.pointerId !== down.id) return;
     if (e.pointerType === 'mouse' && !(e.buttons & 1)) { endDrag(); return; }
     moved = Math.abs(e.clientX - down.x);
     if (moved > 4) {
@@ -364,6 +398,7 @@ function wire(items, figs, restyle) {
     if (!down) return;
     const id = down.id;
     down = null;
+    if (moved > 4) suppressClick = true;
     if (vp.hasPointerCapture(id)) vp.releasePointerCapture(id);
     vp.classList.remove('drag');
   };
