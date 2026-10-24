@@ -41,9 +41,9 @@ const el = (t, c, h) => { const e = document.createElement(t); if (c) e.classNam
 const NEIGHBOUR = 0.6; /* scale of every image away from centre */
 const SCROLL_SPEED = 1.0; /* wheel delta multiplier: 1 = native travel per notch of the wheel */
 const GLIDE = 0.16; /* easing step: fraction of the remaining distance per frame */
-const FLING_MIN = 3; /* touch swipe: minimum image slots travelled per gesture */
 const FLING_MAX = 6; /* touch swipe: cap on the post-release float, in image slots */
-const FLING_MS = 280; /* flick velocity (px/ms) times this = extra momentum px */
+const FLING_MS = 280; /* flick velocity (px/ms) times this = float distance in px */
+const FLING_MIN_V = 0.25; /* px/ms; releases slower than this rest exactly where they end */
 const CAPTION_OFFSET = 40; /* px between the bottom of the tallest image and its title */
 
 /* The box an image of pixel size w x h renders in: centred image height vs
@@ -356,11 +356,10 @@ function wire(items, figs, restyle) {
   /* Touch: a HORIZONTAL drag anywhere on the page drives the strip, like
      the wheel. Vertical swipes stay native - body is touch-action: pan-y,
      so pull-to-refresh and rubber-banding keep working - and the script
-     never moves the strip for them. On release a horizontal swipe keeps
-     floating: every gesture travels at least FLING_MIN image slots in
-     total (a fast flick goes further, capped at FLING_MAX), eased out by
-     the same GLIDE as the wheel. No snap: the strip never pulls toward an
-     image afterwards. */
+     never moves the strip for them. On release a fast flick keeps
+     floating with velocity momentum (capped at FLING_MAX slots), eased
+     out by the same GLIDE as the wheel; a slow swipe simply rests where
+     it ends. No snap: the strip never pulls toward an image. */
   document.addEventListener('pointerdown', e => {
     if (e.pointerType !== 'touch' || !e.isPrimary || dlg.open) return;
     stop();
@@ -456,28 +455,30 @@ function wire(items, figs, restyle) {
   });
   const endDrag = () => {
     if (!down) return;
-    const id = down.id, wasTouch = !!down.touch, axis = down.axis, t0 = down.t0, sp = down.sp;
+    const id = down.id, wasTouch = !!down.touch, axis = down.axis, sp = down.sp;
     down = null;
     if (moved > 4) suppressClick = true;
     if (id !== 'touch' && vp.hasPointerCapture(id)) vp.releasePointerCapture(id);
     vp.classList.remove('drag');
-    /* Touch fling, horizontal gestures only: the swipe keeps floating after
-       the finger lifts - at least FLING_MIN image slots of travel in total,
-       more for a fast flick, capped at FLING_MAX slots. The usual GLIDE
-       easing takes the strip there; it never snaps to an image. Mouse
-       drags and vertical touches (native scroll/refresh) are exempt. */
+    /* Touch fling, horizontal gestures only, purely velocity-based: a
+       fast flick keeps floating after the finger lifts (a couple of image
+       slots for a good flick, capped at FLING_MAX), a slow or held release
+       rests exactly where it ends - small swipes stay precise and no image
+       becomes unreachable. The usual GLIDE easing takes the strip there;
+       it never snaps to an image. Mouse drags and vertical touches (native
+       scroll/refresh) are exempt. */
     if (wasTouch && axis === 'h') {
-      const travel = target - t0;
       let v = 0;
       if (sp && sp.length > 1) {
         const a = sp[0], b = sp[sp.length - 1];
         if (b[0] > a[0] && performance.now() - b[0] < 90) v = (b[1] - a[1]) / (b[0] - a[0]);
       }
-      const dir = travel ? Math.sign(travel) : (v ? -Math.sign(v) : 0);
-      if (dir) {
+      if (Math.abs(v) >= FLING_MIN_V) {
         const slot = loopW() / N;
-        const extra = Math.min(Math.max(FLING_MIN * slot - Math.abs(travel), Math.abs(v) * FLING_MS), FLING_MAX * slot);
-        if (extra > 0) { target = clamp(target + dir * extra); kick(); }
+        const extra = Math.min(Math.abs(v) * FLING_MS, FLING_MAX * slot);
+        /* the strip travels opposite the finger, same as during the drag */
+        target = clamp(target - Math.sign(v) * extra);
+        kick();
       }
     }
   };
