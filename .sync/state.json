@@ -27,20 +27,6 @@
         ],
         "exif": {}
       },
-      "IMG_1448": {
-        "sha256": "d2f2bd1c12246c532d2e21b729defa0723df7d5223e2bfa7ef838f0338b3b01b",
-        "width": 1200,
-        "height": 800,
-        "sizes": [
-          600,
-          1200
-        ],
-        "jxlSizes": [
-          600,
-          1200
-        ],
-        "exif": {}
-      },
       "IMG_2283": {
         "sha256": "774e593e210609e7cb1fb21ea518b0542f9f045e2f124a861db6a1d7e0149c37",
         "width": 2400,
