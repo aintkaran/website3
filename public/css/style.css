@@ -209,8 +209,11 @@ body {
   line-height: 1.45;
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
-  touch-action: none; /* the page never scrolls natively; gallery.js turns
-                         touch drags anywhere on screen into strip travel */
+  /* The page never pans natively; gallery.js turns touch drags anywhere on
+     screen into strip travel. pinch-zoom keeps two-finger page zoom working
+     where supported; older engines ignore that value and fall back to none. */
+  touch-action: none;
+  touch-action: pinch-zoom;
 }
 
 a { color: inherit; text-decoration: none; }
@@ -256,6 +259,7 @@ a:focus-visible, button:focus-visible {
   cursor: grab;
   touch-action: none; /* every touch drag is handled in gallery.js (swipe up
                          scrolls the strip, same glide as the wheel) */
+  touch-action: pinch-zoom; /* ignored where unsupported; none then applies */
   outline: none; /* mouse-driven strip: a focus ring here paints 1px lines
                     across the page in Safari after zoom - arrows work globally */
 }
