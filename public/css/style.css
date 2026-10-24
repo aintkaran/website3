@@ -209,11 +209,12 @@ body {
   line-height: 1.45;
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
-  /* The page never pans natively; gallery.js turns touch drags anywhere on
-     screen into strip travel. pinch-zoom keeps two-finger page zoom working
-     where supported; older engines ignore that value and fall back to none. */
-  touch-action: none;
-  touch-action: pinch-zoom;
+  /* Vertical touch stays native: pull-to-refresh and rubber-banding keep
+     working. gallery.js owns only horizontal drags. pinch-zoom keeps
+     two-finger page zoom working where supported; older engines ignore
+     that value and fall back to plain pan-y. */
+  touch-action: pan-y;
+  touch-action: pan-y pinch-zoom;
 }
 
 a { color: inherit; text-decoration: none; }
@@ -257,9 +258,9 @@ a:focus-visible, button:focus-visible {
   scrollbar-width: none;
   -ms-overflow-style: none;
   cursor: grab;
-  touch-action: none; /* every touch drag is handled in gallery.js (swipe up
-                         scrolls the strip, same glide as the wheel) */
-  touch-action: pinch-zoom; /* ignored where unsupported; none then applies */
+  touch-action: pan-y; /* only horizontal touch drags are handled in
+                          gallery.js; vertical stays native for pull-to-refresh */
+  touch-action: pan-y pinch-zoom; /* ignored where unsupported; pan-y then applies */
   outline: none; /* mouse-driven strip: a focus ring here paints 1px lines
                     across the page in Safari after zoom - arrows work globally */
 }
