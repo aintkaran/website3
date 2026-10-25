@@ -495,8 +495,10 @@ function wire(items, figs, restyle) {
     if (dlg.open || e.altKey || e.ctrlKey || e.metaKey || e.target.closest('input, textarea, select, [contenteditable]')) return;
     if (e.key === 'ArrowRight') { e.preventDefault(); goto(cur + 1); }
     if (e.key === 'ArrowLeft') { e.preventDefault(); goto(cur - 1); }
-    /* Enter or Space with the viewport focused zooms the centred photo */
-    if ((e.key === 'Enter' || e.key === ' ') && e.target === vp) {
+    /* Enter or Space zooms the centred photo. Works from a cold start (body
+       focus) too - only links and real controls keep their native keys. */
+    if ((e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') &&
+        !e.target.closest('a, button, summary, input, textarea, select, [contenteditable], [role="button"], [role="link"]')) {
       e.preventDefault();
       openZoom(items[cur % items.length].fig.querySelector('img'));
     }
