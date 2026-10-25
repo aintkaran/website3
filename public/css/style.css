@@ -246,11 +246,14 @@ a:focus-visible, button:focus-visible {
    element, corners to captions to footer, is 13px / weight 400. The top
    corners share a line-height, so their first baselines align. */
 .site-title { font-size: 13px; font-weight: 400; letter-spacing: 0.01em; line-height: 19px; }
-/* Compose the bio's line breaks deliberately at every viewport - balanced
-   line lengths, no orphan lines - instead of arbitrary wrapping. The bio
-   link's own nowrap rule still keeps "Vitamin Studios" on one line.
-   Browsers without text-wrap: balance fall back to plain wrapping. */
-.bio { line-height: 19px; color: var(--tx-2); text-wrap: balance; }
+.bio { line-height: 19px; color: var(--tx-2); }
+@media (min-width: 641px) {
+  /* Desktop: compose the bio's line breaks deliberately - balanced line
+     lengths, no orphan lines - instead of arbitrary wrapping. The bio
+     link's own nowrap rule still keeps "Vitamin Studios" on one line.
+     Browsers without text-wrap: balance fall back to plain wrapping. */
+  .bio { text-wrap: balance; }
+}
 .bio a { text-decoration: underline; text-underline-offset: 2px; white-space: nowrap; /* "Vitamin Studios" never splits across lines (user's rule, every viewport) */ }
 
 /* ---- Gallery: the hero. Images own the middle of the screen. ---- */
@@ -359,9 +362,11 @@ dialog#zoom img { width: 100%; height: 100%; object-fit: contain; }
   :root { --img-h: 40vh; --img-w: 62vw; --gap: 40px; }
 
   /* Header: the site name keeps the top-left corner; the bio moves to its
-     own line below it and spans the full viewport width, right aligned. */
+     own line below it and spans the full viewport width, right aligned.
+     Two line-heights down leaves a full blank line of air between the
+     site name and the bio. */
   .corner-tr {
-    top: 19px; /* one title line-height below the site name */
+    top: 38px;
     left: 0;
     right: 0;
     max-width: none;
