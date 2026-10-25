@@ -22,6 +22,26 @@
         "web/2-4-_MG_0259-600.jxl",
         "web/2-4-_MG_0259-1200.jxl"
       ]
+    },
+    {
+      "file": "3-2-_MG_0276",
+      "source": "3-2-_MG_0276.png",
+      "title": "3-2-_MG_0276",
+      "caption": "",
+      "credit": "",
+      "alt": "",
+      "order": 999,
+      "exif": "",
+      "width": 1200,
+      "height": 1800,
+      "webp": [
+        "web/3-2-_MG_0276-600.webp",
+        "web/3-2-_MG_0276-1200.webp"
+      ],
+      "jxl": [
+        "web/3-2-_MG_0276-600.jxl",
+        "web/3-2-_MG_0276-1200.jxl"
+      ]
     }
   ]
 }

@@ -25,6 +25,28 @@
         ],
         "jxl": true,
         "jpg": false
+      },
+      {
+        "file": "3-2-_MG_0276",
+        "title": "3-2-_MG_0276",
+        "date": "",
+        "width": 1200,
+        "height": 1800,
+        "sizes": [
+          600,
+          1200
+        ],
+        "alt": "",
+        "caption": "",
+        "credit": "",
+        "exif": "",
+        "order": 999,
+        "jxlSizes": [
+          600,
+          1200
+        ],
+        "jxl": true,
+        "jpg": false
       }
     ]
   },
