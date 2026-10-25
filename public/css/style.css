@@ -356,7 +356,7 @@ dialog#zoom {
   max-height: 100dvh;
   padding: 5vh 5vw;
   cursor: zoom-out;
-  touch-action: pinch-zoom; /* body's none would otherwise block zooming the photo */
+  touch-action: pinch-zoom; /* allow native pinch zoom on the enlarged photo */
 }
 dialog#zoom::backdrop { background: var(--bg); }
 dialog#zoom picture { display: block; width: 100%; height: 100%; }
@@ -409,8 +409,9 @@ dialog#zoom img { width: 100%; height: 100%; object-fit: contain; }
 }
 .skip-link:focus-visible { transform: none; }
 
-/* ---- Footer tap targets: at least 28x28 CSS px hit areas (Apple HIG iOS
-   minimum; iOS shares the CSS-px/pt grid). An invisible ::after expands each
+/* ---- Footer tap targets: expanded CSS-pixel hit areas on the single-row
+   layout; the compact two-row layout below intentionally uses less height.
+   These web dimensions are not native Apple HIG compliance. ::after expands each
    link's clickable region: zero layout change - text, gaps and footer height
    are pixel-identical. Text and X are narrower than 28px, so their hit area
    extends sideways too, keeping a dead zone before neighbouring links. ---- */
