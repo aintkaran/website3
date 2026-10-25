@@ -56,6 +56,21 @@
           2400
         ]
       },
+      "Hirayat2": {
+        "sha256": "16a45ba703df1ab8be9dcfdae9f0d47bcde73c513bee0df89c59094747d41ec9",
+        "width": 2400,
+        "height": 3600,
+        "sizes": [
+          600,
+          1200,
+          2400
+        ],
+        "jxlSizes": [
+          600,
+          1200,
+          2400
+        ]
+      },
       "Hirayat3": {
         "sha256": "2d3edbf54d4e91ea54dbaa22d6bcd72c49e47e4cc3f0b4762363da1153fb22e7",
         "width": 2400,
