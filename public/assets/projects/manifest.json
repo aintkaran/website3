@@ -176,5 +176,58 @@
         "jpg": false
       }
     ]
+  },
+  {
+    "slug": "nira",
+    "project": "nira",
+    "date": "",
+    "images": [
+      {
+        "file": "1-0M2A6227",
+        "title": "1-0M2A6227",
+        "date": "",
+        "width": 1200,
+        "height": 1800,
+        "sizes": [
+          600,
+          1200
+        ],
+        "alt": "",
+        "caption": "",
+        "credit": "",
+        "exif": "",
+        "order": 999,
+        "jxlSizes": [
+          600,
+          1200
+        ],
+        "jxl": true,
+        "jpg": false
+      },
+      {
+        "file": "2-0M2A6143",
+        "title": "2-0M2A6143",
+        "date": "",
+        "width": 2400,
+        "height": 3600,
+        "sizes": [
+          600,
+          1200,
+          2400
+        ],
+        "alt": "",
+        "caption": "",
+        "credit": "",
+        "exif": "",
+        "order": 999,
+        "jxlSizes": [
+          600,
+          1200,
+          2400
+        ],
+        "jxl": true,
+        "jpg": false
+      }
+    ]
   }
 ]

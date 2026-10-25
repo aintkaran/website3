@@ -1,0 +1,49 @@
+{
+  "project": "nira",
+  "slug": "nira",
+  "date": "",
+  "images": [
+    {
+      "file": "1-0M2A6227",
+      "source": "1-0M2A6227.png",
+      "title": "1-0M2A6227",
+      "caption": "",
+      "credit": "",
+      "alt": "",
+      "order": 999,
+      "exif": "",
+      "width": 1200,
+      "height": 1800,
+      "webp": [
+        "web/1-0M2A6227-600.webp",
+        "web/1-0M2A6227-1200.webp"
+      ],
+      "jxl": [
+        "web/1-0M2A6227-600.jxl",
+        "web/1-0M2A6227-1200.jxl"
+      ]
+    },
+    {
+      "file": "2-0M2A6143",
+      "source": "2-0M2A6143.png",
+      "title": "2-0M2A6143",
+      "caption": "",
+      "credit": "",
+      "alt": "",
+      "order": 999,
+      "exif": "",
+      "width": 2400,
+      "height": 3600,
+      "webp": [
+        "web/2-0M2A6143-600.webp",
+        "web/2-0M2A6143-1200.webp",
+        "web/2-0M2A6143-2400.webp"
+      ],
+      "jxl": [
+        "web/2-0M2A6143-600.jxl",
+        "web/2-0M2A6143-1200.jxl",
+        "web/2-0M2A6143-2400.jxl"
+      ]
+    }
+  ]
+}
