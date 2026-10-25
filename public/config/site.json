@@ -1,19 +1,19 @@
 {
-  "name": "aintkaran",
+  "name": "aintKaran",
   "bio": "Karan is a multi-disciplinary creative - photography, design, business, media, tech. He does a bit of everything and loves mixing it all up. Currently at Vitamin Studios.",
   "bioLink": { "text": "Vitamin Studios", "url": "https://www.vitaminstudios.in" },
-  "location": "Based in Mumbai",
+  "location": "based in mumbai",
   "year": "2026",
   "copyright": "© aintKaran | 2026",
   "contact": [
-    { "label": "WhatsApp", "url": "https://wa.me/917367010240" },
-    { "label": "Email", "url": "mailto:aintkaran@icloud.com" },
-    { "label": "Text", "url": "sms:+917367010240" }
+    { "label": "whatsApp", "url": "https://wa.me/917367010240" },
+    { "label": "email", "url": "mailto:aintkaran@icloud.com" },
+    { "label": "text", "url": "sms:+917367010240" }
   ],
   "social": [
-    { "label": "Instagram", "url": "https://instagram.com/aintkaran" },
-    { "label": "Pinterest", "url": "https://www.pinterest.com/aintkaran" },
-    { "label": "LinkedIn", "url": "https://www.linkedin.com/in/aintkaran" },
-    { "label": "X", "url": "https://x.com/aintkaran" }
+    { "label": "instagram", "url": "https://instagram.com/aintkaran" },
+    { "label": "pinterest", "url": "https://www.pinterest.com/aintkaran" },
+    { "label": "linkedIn", "url": "https://www.linkedin.com/in/aintkaran" },
+    { "label": "x", "url": "https://x.com/aintkaran" }
   ]
 }
