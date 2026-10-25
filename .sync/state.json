@@ -41,6 +41,21 @@
       }
     },
     "Hiraeth": {
+      "Hirayat1": {
+        "sha256": "05c93c1a329b3e8715920e6ecf2bd3114d47eb55e47349b561ba941ede8e8943",
+        "width": 2400,
+        "height": 3600,
+        "sizes": [
+          600,
+          1200,
+          2400
+        ],
+        "jxlSizes": [
+          600,
+          1200,
+          2400
+        ]
+      },
       "Hirayat3": {
         "sha256": "2d3edbf54d4e91ea54dbaa22d6bcd72c49e47e4cc3f0b4762363da1153fb22e7",
         "width": 2400,
