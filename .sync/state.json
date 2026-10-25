@@ -12,6 +12,34 @@
     "v": 2
   },
   "projects": {
+    "ADxVW": {
+      "1-2-_MG_0276": {
+        "sha256": "9fe270920cdab6a88794e4eba9390fbc8d9e9d014a83d64c7f6a5d480b558733",
+        "width": 1200,
+        "height": 1800,
+        "sizes": [
+          600,
+          1200
+        ],
+        "jxlSizes": [
+          600,
+          1200
+        ]
+      },
+      "2-4-_MG_0259": {
+        "sha256": "e438427a1ea54b27d218687bcb7ebcbace627edef7cd9a53fb0bb4f7ecf1238f",
+        "width": 1200,
+        "height": 1800,
+        "sizes": [
+          600,
+          1200
+        ],
+        "jxlSizes": [
+          600,
+          1200
+        ]
+      }
+    },
     "Hiraeth": {
       "Hirayat1": {
         "sha256": "05c93c1a329b3e8715920e6ecf2bd3114d47eb55e47349b561ba941ede8e8943",
