@@ -140,6 +140,13 @@ async function init() {
     if (js.length) img.dataset.fullJxl = `${b}-${js[js.length - 1]}.jxl`;
     pic.append(src, img);
     f.append(pic);
+    /* EXIF (camera, lens, exposure) as plain text for crawlers and agents. Visually hidden for now. */
+    if (i.exif) {
+      const x = el('span', 'exif', i.exif);
+      x.setAttribute('aria-hidden', 'true');
+      x.style.cssText = 'position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap';
+      f.append(x);
+    }
     it.fig = f;
     it.size = () => fitBox(i.width, i.height);
   });
