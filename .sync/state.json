@@ -40,6 +40,23 @@
         ]
       }
     },
+    "Hiraeth": {
+      "Hirayat3": {
+        "sha256": "2d3edbf54d4e91ea54dbaa22d6bcd72c49e47e4cc3f0b4762363da1153fb22e7",
+        "width": 2400,
+        "height": 3600,
+        "sizes": [
+          600,
+          1200,
+          2400
+        ],
+        "jxlSizes": [
+          600,
+          1200,
+          2400
+        ]
+      }
+    },
     "Monroe": {
       "IMG_0985": {
         "sha256": "67c16741015d804a3c8c7b68460e6ee0fb48fdf42d61778a7dc8522ecad114f0",
