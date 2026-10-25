@@ -1,15 +1,15 @@
 {
-  "version": 1,
+  "version": 2,
   "settings": {
     "widths": [
       600,
       1200,
       2400
     ],
-    "webpQuality": 82,
-    "jxlQuality": 80,
+    "webpQuality": 90,
+    "jxlQuality": 90,
     "jxlEffort": 4,
-    "v": 1
+    "v": 2
   },
   "projects": {}
 }
