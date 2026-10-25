@@ -385,7 +385,7 @@ dialog#zoom img { width: 100%; height: 100%; object-fit: contain; }
     display: grid;
     grid-template-columns: 1fr auto;
     column-gap: 16px;
-    row-gap: 8px; /* keeps 24px target circles of the two link rows clear (WCAG 2.5.8 spacing) */
+    row-gap: 11px; /* 24px target circles (WCAG 2.5.8) + 28.8px hit areas stay clear */
     align-items: baseline;
   }
   .foot-left, .foot-right { display: contents; }
@@ -425,3 +425,11 @@ dialog#zoom img { width: 100%; height: 100%; object-fit: contain; }
   border: 1px solid var(--tx);
 }
 .skip-link:focus-visible { transform: none; }
+
+/* ---- Footer tap targets: at least 28x28 CSS px hit areas (Apple HIG iOS
+   minimum; iOS shares the CSS-px/pt grid). Inline padding grows the clickable
+   box without moving the text. Text and X are narrower than 28px, so they
+   get inline padding too, keeping a dead zone between neighbouring targets. ---- */
+.site-footer a { padding-block: 5px; }
+#contact a[href^="sms:"] { padding-inline: 2.5px; }
+#socials a[href*="x.com"] { padding-inline: 10px; }
