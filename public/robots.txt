@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://website3-aintkaran.vercel.app/sitemap.xml
