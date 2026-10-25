@@ -24,27 +24,6 @@
         ],
         "jxl": true,
         "jpg": false
-      },
-      {
-        "file": "3-_MG_0275",
-        "title": "3-_MG_0275",
-        "date": "",
-        "width": 1200,
-        "height": 1800,
-        "sizes": [
-          600,
-          1200
-        ],
-        "alt": "",
-        "caption": "",
-        "credit": "",
-        "order": 999,
-        "jxlSizes": [
-          600,
-          1200
-        ],
-        "jxl": true,
-        "jpg": false
       }
     ]
   },
