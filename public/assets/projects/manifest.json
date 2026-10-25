@@ -258,6 +258,30 @@
         ],
         "jxl": true,
         "jpg": false
+      },
+      {
+        "file": "_MG_7004",
+        "title": "_MG_7004",
+        "date": "",
+        "width": 2400,
+        "height": 1029,
+        "sizes": [
+          600,
+          1200,
+          2400
+        ],
+        "alt": "",
+        "caption": "",
+        "credit": "",
+        "exif": "",
+        "order": 999,
+        "jxlSizes": [
+          600,
+          1200,
+          2400
+        ],
+        "jxl": true,
+        "jpg": false
       }
     ]
   }
