@@ -25,6 +25,19 @@
           600,
           1200
         ]
+      },
+      "4-_MG_0259": {
+        "sha256": "e438427a1ea54b27d218687bcb7ebcbace627edef7cd9a53fb0bb4f7ecf1238f",
+        "width": 1200,
+        "height": 1800,
+        "sizes": [
+          600,
+          1200
+        ],
+        "jxlSizes": [
+          600,
+          1200
+        ]
       }
     },
     "Monroe": {
