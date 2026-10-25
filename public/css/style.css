@@ -399,3 +399,16 @@ dialog#zoom img { width: 100%; height: 100%; object-fit: contain; }
 @media (prefers-reduced-motion: reduce) {
   * { scroll-behavior: auto !important; }
 }
+
+/* ---- Pull-to-refresh on touch devices ----
+   PTR fires from the rubber-band overscroll at the top of the page's scroll
+   area. body { overflow: hidden } plus a page exactly viewport-height leaves
+   nothing scrollable, so there is no overscroll and the gesture dies (this
+   is why pull-to-refresh did nothing on iOS Safari). Give touch devices 1px
+   of scrollable overflow: the fixed corners never move and the gallery can
+   shift at most 1px, so the page looks identical. Desktop keeps
+   overflow: hidden with zero scroll. */
+@media (pointer: coarse) {
+  body { overflow: visible; }
+  .stage { height: calc(100vh + 1px); height: calc(100dvh + 1px); }
+}
