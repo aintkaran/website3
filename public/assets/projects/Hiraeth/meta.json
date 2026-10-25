@@ -4,6 +4,28 @@
   "date": "",
   "images": [
     {
+      "file": "Hirayat1",
+      "source": "Hirayat1.jpg",
+      "title": "Hirayat1",
+      "caption": "",
+      "credit": "",
+      "alt": "",
+      "order": 999,
+      "exif": "Camera: Canon EOS 6D, Lens: Canon EF 100mm f/2.8L Macro IS USM, Focal length: 100 mm, Aperture: f/5.6, Shutter: 1/30 s, ISO: 200",
+      "width": 2400,
+      "height": 3600,
+      "webp": [
+        "web/Hirayat1-600.webp",
+        "web/Hirayat1-1200.webp",
+        "web/Hirayat1-2400.webp"
+      ],
+      "jxl": [
+        "web/Hirayat1-600.jxl",
+        "web/Hirayat1-1200.jxl",
+        "web/Hirayat1-2400.jxl"
+      ]
+    },
+    {
       "file": "Hirayat2",
       "source": "Hirayat2.jpg",
       "title": "Hirayat2",

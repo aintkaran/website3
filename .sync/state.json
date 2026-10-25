@@ -13,6 +13,21 @@
   },
   "projects": {
     "Hiraeth": {
+      "Hirayat1": {
+        "sha256": "05c93c1a329b3e8715920e6ecf2bd3114d47eb55e47349b561ba941ede8e8943",
+        "width": 2400,
+        "height": 3600,
+        "sizes": [
+          600,
+          1200,
+          2400
+        ],
+        "jxlSizes": [
+          600,
+          1200,
+          2400
+        ]
+      },
       "Hirayat2": {
         "sha256": "16a45ba703df1ab8be9dcfdae9f0d47bcde73c513bee0df89c59094747d41ec9",
         "width": 2400,
