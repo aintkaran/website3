@@ -235,10 +235,11 @@ a:focus-visible, button:focus-visible {
 .corner-tl { top: 0; left: 0; }
 .corner-tr {
   top: 0; right: 0; text-align: right;
-  /* Desktop: the bio's first line sits level with the site name and wraps in
-     a narrower column as the window shrinks. On small screens it drops to
-     its own full-width line (see the mobile block below). */
-  max-width: min(46ch, calc(100vw - 2 * var(--pad) - 110px));
+  /* Desktop: the bio's first line sits level with the site name. The column
+     gets a generous 72ch on wide screens (user's choice) and narrows as the
+     window shrinks, never crossing the site name. On small screens it drops
+     to its own full-width line (see the mobile block below). */
+  max-width: min(72ch, calc(100vw - 2 * var(--pad) - 110px));
 }
 
 /* One text size and weight for the whole page (user's choice): every
