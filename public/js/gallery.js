@@ -495,21 +495,32 @@ function wire(items, figs, restyle) {
     if (dlg.open || e.altKey || e.ctrlKey || e.metaKey || e.target.closest('input, textarea, select, [contenteditable]')) return;
     if (e.key === 'ArrowRight') { e.preventDefault(); goto(cur + 1); }
     if (e.key === 'ArrowLeft') { e.preventDefault(); goto(cur - 1); }
+    /* Enter or Space with the viewport focused zooms the centred photo */
+    if ((e.key === 'Enter' || e.key === ' ') && e.target === vp) {
+      e.preventDefault();
+      openZoom(items[cur % items.length].fig.querySelector('img'));
+    }
   });
 
   // Safari's native image drag must not take over the gallery pointer.
   track.addEventListener('dragstart', e => e.preventDefault());
 
-  /* Click an image to zoom the full-size export */
-  track.addEventListener('click', e => {
-    if (moved > 4 || e.target.tagName !== 'IMG') return;
+  /* Open the full-size export of a gallery image in the zoom dialog.
+     Shared by pointer clicks and the keyboard (Enter/Space on the viewport). */
+  const openZoom = img => {
     stop();
     target = vp.scrollLeft;
     const zoomSource = $('#zoomsource');
-    zoomSource.srcset = e.target.dataset.fullJxl || '';
-    $('#zoomimg').src = e.target.dataset.full;
-    $('#zoomimg').alt = e.target.alt;
+    zoomSource.srcset = img.dataset.fullJxl || '';
+    $('#zoomimg').src = img.dataset.full;
+    $('#zoomimg').alt = img.alt;
     dlg.showModal();
+  };
+
+  /* Click an image to zoom the full-size export */
+  track.addEventListener('click', e => {
+    if (moved > 4 || e.target.tagName !== 'IMG') return;
+    openZoom(e.target);
   });
   dlg.addEventListener('click', () => dlg.close());
   dlg.addEventListener('close', () => {
