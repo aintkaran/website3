@@ -42,9 +42,10 @@
 <meta name="description" content="aintkaran is the portfolio of Karan, a multi-disciplinary creative in Mumbai - photography, design, business, media, tech. Currently at Vitamin Studios.">
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/caption.css">
-<link rel="stylesheet" href="css/style.css?v=7">
+<link rel="stylesheet" href="css/style.css?v=8">
 </head>
 <body>
+  <a class="skip-link" href="#viewport">Skip to gallery</a>
   <!-- Page information sits in the corners; the images own the middle. -->
   <header class="corner corner-tl">
     <h1 class="site-title">aintkaran</h1>
@@ -55,7 +56,7 @@
   </div>
 
   <main class="stage">
-    <section id="viewport" class="viewport" tabindex="0" aria-label="Image gallery. Scroll or use arrow keys.">
+    <section id="viewport" class="viewport" tabindex="0" aria-label="Image gallery. Scroll or use arrow keys. Press Enter to zoom the centred photo.">
       <div id="track" class="track"></div>
     </section>
     <!-- One static title + caption, centred directly under the focused image. -->
@@ -78,7 +79,7 @@
 
   <dialog id="zoom" aria-label="Enlarged photo. Click or press Escape to close."><picture><source id="zoomsource" type="image/jxl"><img id="zoomimg" alt=""></picture></dialog>
 
-  <script src="js/gallery.js?v=2" defer></script>
+  <script src="js/gallery.js?v=3" defer></script>
   <!-- Vercel Speed Insights (plain-HTML integration; served by Vercel on deploy) -->
   <script>
     window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
