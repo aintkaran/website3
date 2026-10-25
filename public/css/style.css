@@ -247,7 +247,7 @@ a:focus-visible, button:focus-visible {
    corners share a line-height, so their first baselines align. */
 .site-title { font-size: 13px; font-weight: 400; letter-spacing: 0.01em; line-height: 19px; }
 .bio { line-height: 19px; color: var(--tx-2); }
-.bio a { text-decoration: underline; text-underline-offset: 2px; }
+.bio a { text-decoration: underline; text-underline-offset: 2px; white-space: nowrap; /* "Vitamin Studios" never splits across lines (user's rule, every viewport) */ }
 
 /* ---- Gallery: the hero. Images own the middle of the screen. ---- */
 .stage { height: 100vh; height: 100dvh; display: flex; align-items: center; position: relative; }
