@@ -317,6 +317,11 @@ a:focus-visible, button:focus-visible {
   pointer-events: none;
 }
 .now-showing .caption { margin-top: 2px; }
+
+/* TEMPORARY: the photo title/caption/credit block is hidden while the
+   captions are being reworked. The code and data are untouched - delete
+   this one rule to show the block again. */
+.now-showing { display: none; }
 .now-showing .credit { color: var(--tx-2); }
 
 /* ---- Footer: slim, quiet. Copyright left; contact + socials grouped on
