@@ -1,0 +1,29 @@
+{
+  "project": "pulse",
+  "slug": "pulse",
+  "date": "",
+  "images": [
+    {
+      "file": "_MG_6968",
+      "source": "_MG_6968.png",
+      "title": "_MG_6968",
+      "caption": "",
+      "credit": "",
+      "alt": "",
+      "order": 999,
+      "exif": "",
+      "width": 2400,
+      "height": 1678,
+      "webp": [
+        "web/_MG_6968-600.webp",
+        "web/_MG_6968-1200.webp",
+        "web/_MG_6968-2400.webp"
+      ],
+      "jxl": [
+        "web/_MG_6968-600.jxl",
+        "web/_MG_6968-1200.jxl",
+        "web/_MG_6968-2400.jxl"
+      ]
+    }
+  ]
+}

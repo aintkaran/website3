@@ -229,5 +229,36 @@
         "jpg": false
       }
     ]
+  },
+  {
+    "slug": "pulse",
+    "project": "pulse",
+    "date": "",
+    "images": [
+      {
+        "file": "_MG_6968",
+        "title": "_MG_6968",
+        "date": "",
+        "width": 2400,
+        "height": 1678,
+        "sizes": [
+          600,
+          1200,
+          2400
+        ],
+        "alt": "",
+        "caption": "",
+        "credit": "",
+        "exif": "",
+        "order": 999,
+        "jxlSizes": [
+          600,
+          1200,
+          2400
+        ],
+        "jxl": true,
+        "jpg": false
+      }
+    ]
   }
 ]
