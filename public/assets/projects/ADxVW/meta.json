@@ -4,26 +4,6 @@
   "date": "",
   "images": [
     {
-      "file": "1-2-_MG_0276",
-      "source": "1-2-_MG_0276.png",
-      "title": "1-2-_MG_0276",
-      "caption": "",
-      "credit": "",
-      "alt": "",
-      "order": 999,
-      "exif": "",
-      "width": 1200,
-      "height": 1800,
-      "webp": [
-        "web/1-2-_MG_0276-600.webp",
-        "web/1-2-_MG_0276-1200.webp"
-      ],
-      "jxl": [
-        "web/1-2-_MG_0276-600.jxl",
-        "web/1-2-_MG_0276-1200.jxl"
-      ]
-    },
-    {
       "file": "2-4-_MG_0259",
       "source": "2-4-_MG_0259.png",
       "title": "2-4-_MG_0259",

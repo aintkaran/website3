@@ -13,19 +13,6 @@
   },
   "projects": {
     "ADxVW": {
-      "1-2-_MG_0276": {
-        "sha256": "9fe270920cdab6a88794e4eba9390fbc8d9e9d014a83d64c7f6a5d480b558733",
-        "width": 1200,
-        "height": 1800,
-        "sizes": [
-          600,
-          1200
-        ],
-        "jxlSizes": [
-          600,
-          1200
-        ]
-      },
       "2-4-_MG_0259": {
         "sha256": "e438427a1ea54b27d218687bcb7ebcbace627edef7cd9a53fb0bb4f7ecf1238f",
         "width": 1200,
@@ -38,6 +25,10 @@
           600,
           1200
         ]
+      },
+      "2-_MG_0276": {
+        "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6",
+        "skipped": true
       }
     },
     "Hiraeth": {
