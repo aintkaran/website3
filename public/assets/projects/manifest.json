@@ -282,6 +282,50 @@
         ],
         "jxl": true,
         "jpg": false
+      },
+      {
+        "file": "1-_MG_6955",
+        "title": "1-_MG_6955",
+        "date": "",
+        "width": 1200,
+        "height": 839,
+        "sizes": [
+          600,
+          1200
+        ],
+        "alt": "",
+        "caption": "",
+        "credit": "",
+        "exif": "",
+        "order": 999,
+        "jxlSizes": [
+          600,
+          1200
+        ],
+        "jxl": true,
+        "jpg": false
+      },
+      {
+        "file": "2-_F8A8212",
+        "title": "2-_F8A8212",
+        "date": "",
+        "width": 1200,
+        "height": 1800,
+        "sizes": [
+          600,
+          1200
+        ],
+        "alt": "",
+        "caption": "",
+        "credit": "",
+        "exif": "",
+        "order": 999,
+        "jxlSizes": [
+          600,
+          1200
+        ],
+        "jxl": true,
+        "jpg": false
       }
     ]
   }

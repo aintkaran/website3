@@ -46,6 +46,46 @@
         "web/_MG_7004-1200.jxl",
         "web/_MG_7004-2400.jxl"
       ]
+    },
+    {
+      "file": "1-_MG_6955",
+      "source": "1-_MG_6955.png",
+      "title": "1-_MG_6955",
+      "caption": "",
+      "credit": "",
+      "alt": "",
+      "order": 999,
+      "exif": "",
+      "width": 1200,
+      "height": 839,
+      "webp": [
+        "web/1-_MG_6955-600.webp",
+        "web/1-_MG_6955-1200.webp"
+      ],
+      "jxl": [
+        "web/1-_MG_6955-600.jxl",
+        "web/1-_MG_6955-1200.jxl"
+      ]
+    },
+    {
+      "file": "2-_F8A8212",
+      "source": "2-_F8A8212.png",
+      "title": "2-_F8A8212",
+      "caption": "",
+      "credit": "",
+      "alt": "",
+      "order": 999,
+      "exif": "",
+      "width": 1200,
+      "height": 1800,
+      "webp": [
+        "web/2-_F8A8212-600.webp",
+        "web/2-_F8A8212-1200.webp"
+      ],
+      "jxl": [
+        "web/2-_F8A8212-600.jxl",
+        "web/2-_F8A8212-1200.jxl"
+      ]
     }
   ]
 }
