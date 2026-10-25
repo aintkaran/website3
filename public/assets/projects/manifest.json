@@ -1,5 +1,77 @@
 [
   {
+    "slug": "ADxVW",
+    "project": "ADxVW",
+    "date": "",
+    "images": [
+      {
+        "file": "1-_MG_0258",
+        "title": "1-_MG_0258",
+        "date": "",
+        "width": 2400,
+        "height": 1600,
+        "sizes": [
+          600,
+          1200,
+          2400
+        ],
+        "alt": "",
+        "caption": "",
+        "credit": "",
+        "order": 999,
+        "jxlSizes": [
+          600,
+          1200,
+          2400
+        ],
+        "jxl": true,
+        "jpg": false
+      },
+      {
+        "file": "2-_MG_0276",
+        "title": "2-_MG_0276",
+        "date": "",
+        "width": 1200,
+        "height": 1800,
+        "sizes": [
+          600,
+          1200
+        ],
+        "alt": "",
+        "caption": "",
+        "credit": "",
+        "order": 999,
+        "jxlSizes": [
+          600,
+          1200
+        ],
+        "jxl": true,
+        "jpg": false
+      },
+      {
+        "file": "3-_MG_0275",
+        "title": "3-_MG_0275",
+        "date": "",
+        "width": 1200,
+        "height": 1800,
+        "sizes": [
+          600,
+          1200
+        ],
+        "alt": "",
+        "caption": "",
+        "credit": "",
+        "order": 999,
+        "jxlSizes": [
+          600,
+          1200
+        ],
+        "jxl": true,
+        "jpg": false
+      }
+    ]
+  },
+  {
     "slug": "Monroe",
     "project": "Monroe",
     "date": "",

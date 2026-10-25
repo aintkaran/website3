@@ -12,6 +12,49 @@
     "v": 1
   },
   "projects": {
+    "ADxVW": {
+      "1-_MG_0258": {
+        "sha256": "acc5bf79d249e21dc521be50ba80339d297d14ad59d3b9dd203fe995d5b00885",
+        "width": 2400,
+        "height": 1600,
+        "sizes": [
+          600,
+          1200,
+          2400
+        ],
+        "jxlSizes": [
+          600,
+          1200,
+          2400
+        ]
+      },
+      "2-_MG_0276": {
+        "sha256": "9fe270920cdab6a88794e4eba9390fbc8d9e9d014a83d64c7f6a5d480b558733",
+        "width": 1200,
+        "height": 1800,
+        "sizes": [
+          600,
+          1200
+        ],
+        "jxlSizes": [
+          600,
+          1200
+        ]
+      },
+      "3-_MG_0275": {
+        "sha256": "ec4665e16a094c9de784f34a609d6852cc0a6e6f69e0474b4b99eaa6cf479ae1",
+        "width": 1200,
+        "height": 1800,
+        "sizes": [
+          600,
+          1200
+        ],
+        "jxlSizes": [
+          600,
+          1200
+        ]
+      }
+    },
     "Monroe": {
       "IMG_0985": {
         "sha256": "67c16741015d804a3c8c7b68460e6ee0fb48fdf42d61778a7dc8522ecad114f0",
