@@ -49,6 +49,17 @@
   ],
   "redirects": [
     {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "website3-aintkaran.vercel.app"
+        }
+      ],
+      "destination": "https://aintkaran.vercel.app/",
+      "permanent": true
+    },
+    {
       "source": "/:path*",
       "has": [
         {
