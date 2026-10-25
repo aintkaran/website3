@@ -13,21 +13,6 @@
   },
   "projects": {
     "ADxVW": {
-      "1-_MG_0258": {
-        "sha256": "acc5bf79d249e21dc521be50ba80339d297d14ad59d3b9dd203fe995d5b00885",
-        "width": 2400,
-        "height": 1600,
-        "sizes": [
-          600,
-          1200,
-          2400
-        ],
-        "jxlSizes": [
-          600,
-          1200,
-          2400
-        ]
-      },
       "2-_MG_0276": {
         "sha256": "9fe270920cdab6a88794e4eba9390fbc8d9e9d014a83d64c7f6a5d480b558733",
         "width": 1200,
