@@ -11,5 +11,23 @@
     "jxlEffort": 4,
     "v": 2
   },
-  "projects": {}
+  "projects": {
+    "Hiraeth": {
+      "Hirayat2": {
+        "sha256": "16a45ba703df1ab8be9dcfdae9f0d47bcde73c513bee0df89c59094747d41ec9",
+        "width": 2400,
+        "height": 3600,
+        "sizes": [
+          600,
+          1200,
+          2400
+        ],
+        "jxlSizes": [
+          600,
+          1200,
+          2400
+        ]
+      }
+    }
+  }
 }
