@@ -36,6 +36,7 @@ const $ = s => document.querySelector(s);
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const vp = $('#viewport'), track = $('#track'), dlg = $('#zoom');
 const base = s => 'assets/projects/' + encodeURIComponent(s) + '/web/';
+const baseOriginal = s => 'assets/projects/' + encodeURIComponent(s) + '/original/';
 const el = (t, c, h) => { const e = document.createElement(t); if (c) e.className = c; if (h != null) e.textContent = h; return e; };
 const NEIGHBOUR = 0.6; /* scale of every image away from centre */
 const SCROLL_SPEED = 1.0; /* wheel delta multiplier: 1 = native travel per notch of the wheel */
@@ -109,10 +110,53 @@ async function init() {
   for (const m of projects) for (const i of m.images) items.push({ m, i });
   items.forEach((it, n) => {
     const { m, i } = it, b = base(m.slug) + encodeURIComponent(i.file), f = el('figure');
+    if (!i.width || !i.height) { i.width = i.width || 1200; i.height = i.height || 800; }
     /* Responsive widths this image actually has (from the manifest); older
        manifests without `sizes` had the full 600/1200/2400 set. */
     const ws = i.sizes && i.sizes.length ? i.sizes : [600, 1200, 2400];
     const pic = el('picture'), img = el('img');
+    /* HEIC photos publish the unchanged original plus WebP previews. Safari
+       17+ shows the original; browsers without HEIC support get the WebP. */
+    if (i.heic) {
+      const orig = baseOriginal(m.slug) + encodeURIComponent(i.original || i.file);
+      const ws2 = i.sizes && i.sizes.length ? i.sizes : [];
+      const sh = el('source');
+      sh.type = 'image/heic';
+      sh.srcset = orig;
+      pic.append(sh);
+      if (ws2.length) {
+        const sw = el('source');
+        sw.type = 'image/webp';
+        sw.srcset = ws2.map((w) => `${b}-${w}.webp ${w}w`).join(', ');
+        sw.sizes = fitBox(i.width, i.height)[0] + 'px';
+        pic.append(sw);
+      }
+      img.src = ws2.length ? `${b}-${ws2[ws2.length - 1]}.webp` : orig;
+      img.alt = i.alt || '';
+      img.width = i.width;
+      img.height = i.height;
+      img.loading = 'lazy';
+      if (n === 0) img.fetchPriority = 'high';
+      img.decoding = 'async';
+      img.draggable = false;
+      img.dataset.full = img.src;
+      img.onerror = () => {
+        const note = el('span', 'heic-note', (i.title || i.file) + ' - this photo is in HEIC format, which this browser cannot show. It displays in Safari.');
+        note.style.cssText = 'display:flex;align-items:center;justify-content:center;width:100%;height:100%;padding:1em;box-sizing:border-box;font-size:14px;opacity:.7;text-align:center';
+        pic.replaceChildren(note);
+      };
+      pic.append(img);
+      f.append(pic);
+      if (i.exif) {
+        const x = el('span', 'exif', i.exif);
+        x.setAttribute('aria-hidden', 'true');
+        x.style.cssText = 'position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap';
+        f.append(x);
+      }
+      it.fig = f;
+      it.size = () => fitBox(i.width, i.height);
+      return;
+    }
     /* JPEG XL first where supported; WebP remains the native fallback. */
     const js = i.jxlSizes || (i.jxl ? ws : []);
     if (js.length) {
