@@ -516,6 +516,27 @@ function wire(items, figs, restyle) {
 
   /* Open the full-size export of a gallery image in the zoom dialog.
      Shared by pointer clicks and the keyboard (Enter/Space on the viewport). */
+  /* Zoom animation: the photo flies between its gallery thumbnail and its
+     full-size spot (FLIP), ease-out in both directions, and the dialog
+     background fades over the gallery. Reduced motion skips all of it. */
+  const ZOOM_MS = 550, ZOOM_EASE = 'cubic-bezier(0.16, 1, 0.3, 1)';
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  let zoomFrom = null, closing = false;
+  const thumbTransform = () => {
+    if (!zoomFrom || !zoomFrom.isConnected) return null;
+    const t = zoomFrom.getBoundingClientRect(), b = $('#zoomimg').getBoundingClientRect();
+    if (!t.width || !t.height || !b.width || !b.height) return null;
+    const ar = t.width / t.height;
+    const fitW = Math.min(b.width, b.height * ar); /* object-fit: contain size */
+    const s = t.width / fitW;
+    const dx = t.left + t.width / 2 - (b.left + b.width / 2);
+    const dy = t.top + t.height / 2 - (b.top + b.height / 2);
+    return 'translate(' + dx + 'px, ' + dy + 'px) scale(' + s + ')';
+  };
+  const clearZoomAnims = () => {
+    $('#zoomimg').getAnimations().forEach(a => a.cancel());
+    dlg.getAnimations().forEach(a => a.cancel());
+  };
   const openZoom = img => {
     stop();
     target = vp.scrollLeft;
@@ -523,7 +544,31 @@ function wire(items, figs, restyle) {
     zoomSource.srcset = img.dataset.fullJxl || '';
     $('#zoomimg').src = img.dataset.full;
     $('#zoomimg').alt = img.alt;
+    zoomFrom = img;
+    closing = false;
     dlg.showModal();
+    if (reduceMotion.matches) return;
+    const tf = thumbTransform();
+    if (!tf) return;
+    const opts = { duration: ZOOM_MS, easing: ZOOM_EASE };
+    $('#zoomimg').animate([{ transform: tf }, { transform: 'none' }], opts);
+    dlg.animate([{ backgroundColor: 'transparent' }, { backgroundColor: getComputedStyle(dlg).backgroundColor }], opts);
+  };
+  const closeZoom = () => {
+    if (!dlg.open || closing) return;
+    if (reduceMotion.matches) { dlg.close(); return; }
+    clearZoomAnims();
+    const tf = thumbTransform();
+    if (!tf) { dlg.close(); return; }
+    closing = true;
+    const opts = { duration: ZOOM_MS, easing: ZOOM_EASE, fill: 'forwards' };
+    const bg = getComputedStyle(dlg).backgroundColor;
+    dlg.animate([{ backgroundColor: bg }, { backgroundColor: 'transparent' }], opts);
+    $('#zoomimg').animate([{ transform: 'none' }, { transform: tf }], opts).finished.then(() => {
+      dlg.close();
+      clearZoomAnims();
+      closing = false;
+    }, () => { closing = false; });
   };
 
   /* Click an image to zoom the full-size export */
@@ -531,18 +576,6 @@ function wire(items, figs, restyle) {
     if (moved > 4 || e.target.tagName !== 'IMG') return;
     openZoom(e.target);
   });
-  /* Close with the reverse of the open animation (CSS .closing), then close().
-     Reduced motion closes instantly. Escape goes through the same path. */
-  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
-  const closeZoom = () => {
-    if (!dlg.open || dlg.classList.contains('closing')) return;
-    if (reduceMotion.matches) { dlg.close(); return; }
-    dlg.classList.add('closing');
-    dlg.addEventListener('animationend', () => {
-      dlg.classList.remove('closing');
-      dlg.close();
-    }, { once: true });
-  };
   dlg.addEventListener('click', closeZoom);
   dlg.addEventListener('cancel', e => { e.preventDefault(); closeZoom(); });
   dlg.addEventListener('close', () => {
@@ -571,4 +604,5 @@ init().catch(err => {
   console.error(err);
 });
 })();
+
 
