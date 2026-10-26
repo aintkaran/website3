@@ -44,10 +44,13 @@
 <meta name="description" content="aintkaran is the portfolio of Karan, a multi-disciplinary creative in Mumbai - photography, design, business, media, tech. Currently at Vitamin Studios.">
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/caption.css">
-<link rel="stylesheet" href="css/style.css?v=11">
+<link rel="stylesheet" href="css/style.css?v=12">
 </head>
 <body>
   <a class="skip-link" href="#viewport">Skip to gallery</a>
+  <!-- Preloader (preview): quiet Scritto word-roll, then fades to the gallery.
+       aria-hidden decoration; the page behind it is fully in the DOM. -->
+  <div id="preloader" aria-hidden="true"><span class="pl-fallback">Design</span></div>
   <!-- Page information sits in the corners; the images own the middle. -->
   <header class="corner corner-tl">
     <h1 class="site-title">aintkaran</h1>
@@ -70,7 +73,7 @@
 
   <footer class="site-footer">
     <span class="foot-left">
-      <span id="copyright" class="copyright">© aintKaran | 2026</span>
+      <span id="copyright" class="copyright">© aintkaran | 2026</span>
       <span id="loc" class="loc">Based in Mumbai</span>
     </span>
     <div class="foot-right">
@@ -81,6 +84,15 @@
 
   <dialog id="zoom" aria-label="Enlarged photo. Click or press Escape to close."><picture><source id="zoomsource" type="image/jxl"><img id="zoomimg" alt=""></picture></dialog>
 
+  <script type="module" src="js/preloader.js?v=1"></script>
+  <script>
+    /* Preloader failsafe: if the module never runs (old browser, blocked
+       script), hide the overlay so nobody is stuck behind it. */
+    setTimeout(function () {
+      var p = document.getElementById('preloader');
+      if (p && !p.dataset.done) { p.classList.add('done'); setTimeout(function () { p.remove(); }, 400); }
+    }, 4000);
+  </script>
   <script src="js/gallery.js?v=11" defer></script>
   <!-- Vercel Speed Insights (plain-HTML integration; served by Vercel on deploy) -->
   <script>
@@ -94,4 +106,3 @@
   <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
-
