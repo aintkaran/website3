@@ -30,6 +30,13 @@ Type is TikTok Sans, 12 px, weight 300, with automatic optical sizing. Flexoki l
 
 JPEG XL sources have WebP fallbacks. The pipeline exports widths up to 600/1200/2400 without upscaling, at quality 90. It skips HEIC/HEIF; convert those before upload. Current gallery inventory is derived from the manifest, not maintained here as a fixed count.
 
+## Open source libraries and fonts
+- **Scritto** (`@scritto/core` v0.1.0, MIT) - the rolling-word preloader animation, vendored at `public/js/vendor/scritto.js` so the site has no runtime CDN dependency. https://github.com/JaceThings/Scritto
+- **TikTok Sans** (SIL Open Font License 1.1) - the site typeface, served as version-pinned `@fontsource-variable/tiktok-sans` 5.3.0 WOFF2 subsets via jsDelivr, declared in `public/css/fonts.css`. Font: https://github.com/tiktok/TikTokSans - Fontsource: https://fontsource.org/fonts/tiktok-sans
+- **serve** (MIT) - the local dev server behind `npm run dev`. https://github.com/vercel/serve
+
+Vercel Speed Insights and Web Analytics are platform scripts served by Vercel, not bundled libraries. Everything else in `public/js` and `public/css` is written for this site. The image pipeline's libraries are credited in the `originals` README.
+
 ## Search, sharing and measurement
 
 The initial HTML contains the existing bio, contact and social links. JavaScript refreshes those from `site.json` without duplication; keep both versions in sync when editing. The gallery itself still depends on JavaScript.
