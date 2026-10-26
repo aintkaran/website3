@@ -1,5 +1,9 @@
 # Site text and links
 
-**site.json** is the one file to edit for anything written on the page: the bio (and its link), copyright, location, the WhatsApp / Email / Text contact links and the footer social links (in display order).
+`site.json` supplies the bio and its linked phrase, copyright, location, contact links and social links in display order. The runtime reads it when initializing the gallery.
 
-Press the pencil icon to edit; every commit to `main` republishes the site automatically.
+The same approved bio/contact/social content is also present in `public/index.html` so it is available before JavaScript. When changing those fields, update that initial HTML too. The gallery replaces the initial text/links rather than appending duplicates.
+
+Search titles, descriptions, canonical/social metadata and JSON-LD live in `public/index.html`, not in this config. Do not add placeholder captions or new claims as a technical SEO change.
+
+Commit to `main`, then verify Vercel's production deployment and https://aintkaran.vercel.app/. Check desktop and mobile, bio line breaks, the non-breaking Vitamin Studios link, and footer link order.
