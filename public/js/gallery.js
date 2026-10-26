@@ -134,7 +134,7 @@ async function init() {
     img.width = i.width;
     img.height = i.height;
     img.loading = 'lazy';
-    if (n === 0) img.fetchPriority = 'high';
+    if (m.slug === 'pulse' && i.file === '1-_MG_6955') img.fetchPriority = 'high';
     img.decoding = 'async';
     img.draggable = false;
     img.dataset.full = `${b}-${ws[ws.length - 1]}.webp`;
@@ -181,7 +181,7 @@ async function init() {
   real.forEach(f => { const c = clone(f); track.append(c); figs.push(c); });
 
   if (!items.length) { $('#caption').textContent = 'No images yet'; return; }
-  real[0].querySelector('img').loading = 'eager';
+  real[Math.max(0, items.findIndex(x => x.m.slug === 'pulse' && x.i.file === '1-_MG_6955'))].querySelector('img').loading = 'eager';
   const resizeFigures = () => {
     figs.forEach((f, k) => {
       const [w, h] = items[k % items.length].size();
@@ -529,7 +529,7 @@ function wire(items, figs, restyle) {
   /* Zoom animation: the photo flies between its gallery thumbnail and its
      full-size spot (FLIP), ease-out in both directions, and the dialog
      background fades over the gallery. Reduced motion skips all of it. */
-  const ZOOM_MS = 550, ZOOM_EASE = 'cubic-bezier(0.16, 1, 0.3, 1)';
+  const ZOOM_MS = 300, ZOOM_EASE = 'cubic-bezier(0.16, 1, 0.3, 1)';
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
   let zoomFrom = null, closing = false;
   const thumbTransform = () => {
@@ -594,11 +594,11 @@ function wire(items, figs, restyle) {
     $('#zoomimg').removeAttribute('src');
   });
 
-  /* Start with the first image centred. Geometry is explicit, so this is
+  /* Start with the pulse photo 1-_MG_6955 centred (falls back to the first image). Geometry is explicit, so this is
      exact from the first frame. */
   const centreFirst = () => {
     if (figs.length && !vp.dataset.touched) {
-      vp.scrollLeft = target = clamp(centreOf(figs[N]));
+      vp.scrollLeft = target = clamp(centreOf(figs[N + Math.max(0, items.findIndex(x => x.m.slug === 'pulse' && x.i.file === '1-_MG_6955'))]));
       applyScale();
     }
   };
