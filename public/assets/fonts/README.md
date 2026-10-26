@@ -1,15 +1,13 @@
-# Fonts - ABC Areal
+# Fonts
 
-The site is typeset in ABC Areal (superfamily: Areal, Areal Semi Mono, Areal Mono), Dinamo's free revival of Arial:
-https://abcdinamo.com/typefaces/areal
+## Active type
 
-`ABCArealSuperfamilyVariable.woff2` (in this folder) is the foundry's own web file, downloaded from Dinamo's free-font page. One variable file carries the whole superfamily:
+The site uses TikTok Sans through `public/css/fonts.css`, with version-pinned Fontsource 5.3.0 WOFF2 subsets served from jsDelivr. The CSS declares weight 300-900 and optical-size support. The current page-wide settings in `public/css/caption.css` are 12 px, weight 300, with `font-optical-sizing: auto`.
 
-- wght 400-700 (Regular / Medium / Bold - no Thin or Light)
-- MONO 0-100 (0 = proportional, 50 = Semi Mono, 100 = Mono)
-- slnt 0 to -12 (italics)
-- DRKM 0-1 (darkmode)
+The font's license source is linked in `public/css/fonts.css`: https://github.com/tiktok/TikTokSans/blob/main/OFL.txt . Keep those source/license references with future font changes.
 
-License: Dinamo's free fonts license covers web use (https://abcdinamo.com/licenses). Serve the file as shipped - do not modify, convert or rename it. (This repository is public by the owner's choice; the license terms at the link above are the source of truth.)
+## Retained legacy file
 
-Caption treatment lives in `public/css/caption.css`: weight 400, the lightest real weight, with slightly tighter tracking.
+`ABCArealSuperfamilyVariable.woff2` remains in this folder from the earlier ABC Areal setup. The current CSS does not load it. It has not been deleted or relicensed as part of the documentation update; retaining it is not a claim that public redistribution is permitted. Check the foundry's terms before reusing or redistributing it: https://abcdinamo.com/licenses .
+
+Font loading and page styling are separate: edit `fonts.css` for font sources, `caption.css` for shared typography variables and `style.css` for layout. Check real desktop/mobile rendering after changes.
