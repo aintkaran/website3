@@ -531,7 +531,20 @@ function wire(items, figs, restyle) {
     if (moved > 4 || e.target.tagName !== 'IMG') return;
     openZoom(e.target);
   });
-  dlg.addEventListener('click', () => dlg.close());
+  /* Close with the reverse of the open animation (CSS .closing), then close().
+     Reduced motion closes instantly. Escape goes through the same path. */
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const closeZoom = () => {
+    if (!dlg.open || dlg.classList.contains('closing')) return;
+    if (reduceMotion.matches) { dlg.close(); return; }
+    dlg.classList.add('closing');
+    dlg.addEventListener('animationend', () => {
+      dlg.classList.remove('closing');
+      dlg.close();
+    }, { once: true });
+  };
+  dlg.addEventListener('click', closeZoom);
+  dlg.addEventListener('cancel', e => { e.preventDefault(); closeZoom(); });
   dlg.addEventListener('close', () => {
     $('#zoomsource').removeAttribute('srcset');
     $('#zoomimg').removeAttribute('src');
@@ -558,3 +571,4 @@ init().catch(err => {
   console.error(err);
 });
 })();
+
