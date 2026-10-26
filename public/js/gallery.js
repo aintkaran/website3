@@ -79,6 +79,9 @@ async function init() {
   /* Bio: plain text, except the optional site.bioLink span of text, which
      becomes a real link (currently Vitamin Studios). */
   const bio = $('#bio');
+  bio.replaceChildren();
+  $('#contact').replaceChildren();
+  $('#socials').replaceChildren();
   if (site.bioLink && site.bio.includes(site.bioLink.text)) {
     const [pre, post] = site.bio.split(site.bioLink.text);
     const a = el('a', '', site.bioLink.text);
@@ -615,5 +618,4 @@ init().catch(err => {
   console.error(err);
 });
 })();
-
 
