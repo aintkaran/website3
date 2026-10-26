@@ -368,6 +368,7 @@ dialog#zoom {
   cursor: zoom-out;
   touch-action: pinch-zoom; /* allow native pinch zoom on the enlarged photo */
 }
+dialog#zoom:focus, dialog#zoom:focus-visible { outline: none; } /* no focus ring around the whole viewer */
 dialog#zoom::backdrop { background: transparent; } /* gallery shows through while the photo animates; the dialog's own background fades (gallery.js) */
 dialog#zoom picture { display: block; width: 100%; height: 100%; }
 dialog#zoom img { width: 100%; height: 100%; object-fit: contain; }
