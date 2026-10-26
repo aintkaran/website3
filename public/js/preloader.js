@@ -6,20 +6,22 @@
  * Scritto (@scritto/core v0.1.0, MIT, https://github.com/JaceThings/Scritto),
  * vendored at js/vendor/scritto.js so the site has no runtime CDN dependency.
  *
- * Gating: the words roll while the font and the opening photo load, and the
- * overlay reveals as soon as both are ready - the loader fills real wait
- * time, it never adds to it. When everything is cached the ready promise
- * settles almost immediately and the visitor is straight in (MIN_SHOW_MS
- * only prevents a sub-frame flash). MAX_WAIT_MS is the hard cap. Reduced
- * motion or an unsupported browser: no animation, straight in. The inline
- * failsafe in index.html hides the overlay if this module never runs.
+ * Playback (Karan, 2026-10-27): the full word sequence plays on every load,
+ * including warm-cache loads and pull-to-refresh. The overlay reveals once
+ * the whole roll has played AND the font plus opening photo are ready - on
+ * a cold load the loader still fills real wait time, but a cached load no
+ * longer skips the sequence. MAX_WAIT_MS is the hard cap. Reduced motion or
+ * an unsupported browser: no animation, straight in. The inline failsafe in
+ * index.html hides the overlay if this module never runs.
  */
 import './vendor/scritto.js';
 
 const WORDS = ['Design', 'Photography', 'Product', 'aintkaran'];
-const STEP_MS = 750;      // gap between rolls; Scritto's roll is 550ms
-const MIN_SHOW_MS = 400;  // floor, so a cached load never flash-bangs
-const MAX_WAIT_MS = 3200; // hard cap: the preloader can never outlast this
+const STEP_MS = 750;       // gap between rolls; Scritto's roll is 550ms
+const ROLL_MS = 550;       // Scritto's roll duration
+const END_HOLD_MS = 450;   // a beat on the final word before the reveal
+const FULL_SHOW_MS = STEP_MS * (WORDS.length - 1) + ROLL_MS + END_HOLD_MS; // 3250
+const MAX_WAIT_MS = 3600;  // hard cap: the preloader can never outlast this
 
 const el = document.getElementById('preloader');
 const text = document.createElement('scritto-text');
@@ -82,7 +84,9 @@ if (!el || reduce || !capable) {
     t += STEP_MS;
   }
   ready.then(() => {
-    const wait = Math.max(0, MIN_SHOW_MS - (performance.now() - started));
+    /* Ready is only half the condition: the reveal never lands before the
+       full sequence has played, however fast the assets arrived. */
+    const wait = Math.max(0, FULL_SHOW_MS - (performance.now() - started));
     setTimeout(reveal, wait);
   });
   setTimeout(reveal, MAX_WAIT_MS); // belt and braces
