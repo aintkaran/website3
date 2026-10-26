@@ -233,7 +233,15 @@ a:focus-visible, button:focus-visible {
   padding: var(--pad);
   pointer-events: none;
 }
-.corner a { pointer-events: auto; }
+/* Let only the visible text receive input. Corner padding stays transparent
+   to the gallery; text can be selected and links keep their native cue. */
+.corner .site-title, .corner .bio {
+  pointer-events: auto;
+  cursor: text;
+  -webkit-user-select: text;
+  user-select: text;
+}
+.corner a { pointer-events: auto; cursor: pointer; }
 .corner-tl { top: 0; left: 0; }
 .corner-tr {
   top: 0; right: 0; text-align: right;
