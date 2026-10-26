@@ -493,3 +493,32 @@ dialog#zoom img { width: 100%; height: 100%; object-fit: contain; }
 #preloader.done { opacity: 0; pointer-events: none; }
 #preloader scritto-text,
 #preloader .pl-fallback { letter-spacing: 0.01em; }
+/* ---- iPhone landscape: notch and text size ----
+   Safari on iPhone inflates multi-line text blocks in landscape unless told
+   not to (the bio grew past 12px and overlapped the photos). 100% keeps the
+   agreed 12px / 300 everywhere; page zoom is unaffected. viewport-fit=cover
+   lets the page run under the notch, so the side padding adds the left/right
+   safe-area insets. */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+.corner {
+  padding-left: max(var(--pad), env(safe-area-inset-left));
+  padding-right: max(var(--pad), env(safe-area-inset-right));
+}
+.site-footer {
+  padding-left: max(var(--pad), env(safe-area-inset-left));
+  padding-right: max(var(--pad), env(safe-area-inset-right));
+}
+@media (max-width: 360px) {
+  .site-footer {
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+  }
+}
+
+/* Landscape phones: iOS 26 can report a top inset (about 20px measured on
+   the iPhone 17 family and Air). Both corners share the same top padding so
+   the title and bio baselines stay aligned. No-op where there is no inset.
+   Portrait is excluded: Safari's own bar already covers the top there. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .corner { padding-top: max(var(--pad), env(safe-area-inset-top)); }
+}
