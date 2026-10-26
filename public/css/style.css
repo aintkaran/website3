@@ -168,8 +168,8 @@
   --pu: var(--flexoki-purple-600);
   --ma: var(--flexoki-magenta-600);
 
-  --font-body: 'ABC Areal', Arial, Helvetica, sans-serif;
-  --font-mono: 'ABC Areal', 'Courier New', monospace;
+  --font-body: 'TikTok Sans', Arial, Helvetica, sans-serif;
+  --font-mono: 'TikTok Sans', 'Courier New', monospace;
   --pad: clamp(16px, 3vw, 40px);
   --img-h: min(52vh, 540px);
   --img-w: min(52vw, 780px); /* centre image leaves room for the scaled-down neighbours */
@@ -205,7 +205,9 @@ body {
   background: var(--bg);
   color: var(--tx);
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 12px;
+  font-weight: 300;
+  font-optical-sizing: auto;
   line-height: 1.45;
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
@@ -242,10 +244,10 @@ a:focus-visible, button:focus-visible {
   max-width: min(72ch, calc(100vw - 2 * var(--pad) - 110px));
 }
 
-/* One text size and weight for the whole page (user's choice): every
-   element, corners to captions to footer, is 13px / weight 400. The top
-   corners share a line-height, so their first baselines align. */
-.site-title { font-size: 13px; font-weight: 400; letter-spacing: 0.01em; line-height: 19px; }
+/* One text size and weight for the whole page: every element, corners to
+   captions to footer, is 12px / weight 300. The top corners share a
+   line-height, so their first baselines align. */
+.site-title { font-size: 12px; font-weight: 300; letter-spacing: 0.01em; line-height: 19px; }
 .bio { line-height: 19px; color: var(--tx-2); }
 @media (min-width: 641px) {
   /* Desktop: compose the bio's line breaks deliberately - balanced line
