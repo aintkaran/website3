@@ -524,7 +524,16 @@ function wire(items, figs, restyle) {
   let zoomFrom = null, closing = false;
   const thumbTransform = () => {
     if (!zoomFrom || !zoomFrom.isConnected) return null;
-    const t = zoomFrom.getBoundingClientRect(), b = $('#zoomimg').getBoundingClientRect();
+    /* The strip holds three copies of every photo: use the copy of this photo
+       closest to the middle of the screen, which is the one on show. */
+    let src = zoomFrom, best = Infinity;
+    track.querySelectorAll('img').forEach(i => {
+      if (i.dataset.full !== zoomFrom.dataset.full) return;
+      const r = i.getBoundingClientRect();
+      const d = Math.abs(r.left + r.width / 2 - innerWidth / 2);
+      if (d < best) { best = d; src = i; }
+    });
+    const t = src.getBoundingClientRect(), b = $('#zoomimg').getBoundingClientRect();
     if (!t.width || !t.height || !b.width || !b.height) return null;
     const ar = t.width / t.height;
     const fitW = Math.min(b.width, b.height * ar); /* object-fit: contain size */
