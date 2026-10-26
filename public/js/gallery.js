@@ -507,7 +507,17 @@ function wire(items, figs, restyle) {
     if ((e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') &&
         !e.target.closest('a, button, summary, input, textarea, select, [contenteditable], [role="button"], [role="link"]')) {
       e.preventDefault();
-      openZoom(items[cur % items.length].fig.querySelector('img'));
+      /* The strip holds three copies of each photo (and a small set repeats
+         on screen): zoom from the copy nearest the middle of the screen. */
+      const base = items[cur % items.length].fig.querySelector('img');
+      let from = base, best = Infinity;
+      track.querySelectorAll('img').forEach(i => {
+        if (i.dataset.full !== base.dataset.full) return;
+        const r = i.getBoundingClientRect();
+        const dist = Math.abs(r.left + r.width / 2 - innerWidth / 2);
+        if (dist < best) { best = dist; from = i; }
+      });
+      openZoom(from);
     }
   });
 
@@ -524,15 +534,7 @@ function wire(items, figs, restyle) {
   let zoomFrom = null, closing = false;
   const thumbTransform = () => {
     if (!zoomFrom || !zoomFrom.isConnected) return null;
-    /* The strip holds three copies of every photo: use the copy of this photo
-       closest to the middle of the screen, which is the one on show. */
-    let src = zoomFrom, best = Infinity;
-    track.querySelectorAll('img').forEach(i => {
-      if (i.dataset.full !== zoomFrom.dataset.full) return;
-      const r = i.getBoundingClientRect();
-      const d = Math.abs(r.left + r.width / 2 - innerWidth / 2);
-      if (d < best) { best = d; src = i; }
-    });
+    const src = zoomFrom; /* the exact image element that was clicked or centred */
     const t = src.getBoundingClientRect(), b = $('#zoomimg').getBoundingClientRect();
     if (!t.width || !t.height || !b.width || !b.height) return null;
     const ar = t.width / t.height;
