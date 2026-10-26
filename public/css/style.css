@@ -453,14 +453,19 @@ dialog#zoom img { width: 100%; height: 100%; object-fit: contain; }
   #socials a[href*="x.com"]::after { inset: -1.5px -10px; }
 }
 
-/* ---- Zoom open animation: ease-out ---- */
+/* ---- Zoom animation: ease-out in and out ----
+   The dialog fades and scales in on open. On close, gallery.js adds
+   .closing, plays the reverse, then calls close(). */
 @keyframes zoom-in {
   from { opacity: 0; transform: scale(0.94); }
   to { opacity: 1; transform: scale(1); }
 }
-dialog#zoom[open] img {
-  animation: zoom-in 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+@keyframes zoom-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.94); }
 }
+dialog#zoom[open] { animation: zoom-in 550ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+dialog#zoom.closing { animation: zoom-out 550ms cubic-bezier(0.16, 1, 0.3, 1) both; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) {
-  dialog#zoom[open] img { animation: none; }
+  dialog#zoom[open], dialog#zoom.closing { animation: none; }
 }
