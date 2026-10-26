@@ -1,14 +1,14 @@
 /* ALL caption styling lives here. Swap this one block to change the caption look. */
 :root {
-  --caption-family: 'ABC Areal', Arial, system-ui, sans-serif; /* swap for a condensed companion if Areal doesn't read condensed */
-  --caption-wght: 400;      /* lightest REAL weight: Areal's wght axis runs 400-700, there is no Thin/Light */
+  --caption-family: 'TikTok Sans', Arial, system-ui, sans-serif;
+  --caption-wght: 300;
   --caption-tracking: -0.015em; /* tracking changes rhythm, not glyph width - it cannot fake condensed */
-  --caption-size: 13px; /* one size page-wide */
+  --caption-size: 12px; /* one size page-wide */
 }
 .caption {
   font-family: var(--caption-family);
   font-weight: var(--caption-wght);
-  font-variation-settings: 'wght' var(--caption-wght);
+  font-optical-sizing: auto;
   letter-spacing: var(--caption-tracking);
   font-size: var(--caption-size);
   line-height: 1.3;
