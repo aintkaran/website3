@@ -70,8 +70,10 @@
     <section id="viewport" class="viewport" tabindex="0" aria-label="Image gallery. Scroll or use arrow keys. Press Enter to zoom the centred photo.">
       <div id="track" class="track"></div>
     </section>
-    <!-- One static title + caption, centred directly under the focused image. -->
-    <div id="nowshowing" class="now-showing" aria-live="polite">
+    <!-- One static title + caption, centred directly under the focused image.
+         No aria-live while the block is display:none; gallery.js re-adds it
+         if the block is shown again. -->
+    <div id="nowshowing" class="now-showing">
       <p id="title" class="now-title"></p>
       <p id="caption" class="caption"></p>
     </div>
