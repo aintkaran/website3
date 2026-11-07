@@ -322,12 +322,19 @@ function wire(items, figs, resizeFigures) {
   };
 
   /* One static title + caption block, centred under the gallery at a fixed
-     vertical position. Text swaps instantly; the block itself never moves. */
-  const placeCaption = () => { $('#nowshowing').style.top = captionTop() + 'px'; };
+     vertical position. Text swaps instantly; the block itself never moves.
+     The block is display:none in style.css while captions are reworked, so
+     all of this is gated on one flag read from the live style: deleting
+     that single CSS rule re-enables placement, text updates and the
+     aria-live region, with no other code change. */
+  const nowShowing = $('#nowshowing');
+  const captionsOn = getComputedStyle(nowShowing).display !== 'none';
+  if (captionsOn) nowShowing.setAttribute('aria-live', 'polite');
+  const placeCaption = () => { if (captionsOn) nowShowing.style.top = captionTop() + 'px'; };
   placeCaption();
   addEventListener('resize', placeCaption);
   const show = r => {
-    if (r === shown) return;
+    if (!captionsOn || r === shown) return;
     shown = r;
     const { i } = items[r];
     $('#title').textContent = i.title || '';
