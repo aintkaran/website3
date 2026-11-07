@@ -162,18 +162,6 @@ async function init() {
     it.size = () => fitBox(i.width, i.height);
   });
 
-  /* Explicit geometry before the figures enter the DOM: no layout shift as
-     images load, and the loop's copy width never changes under the scroll
-     position. */
-  const restyle = () => items.forEach(it => {
-    const [w, h] = it.size();
-    it.fig.style.width = w + 'px';
-    const im = it.fig.querySelector('img');
-    im.style.width = w + 'px';
-    im.style.height = h + 'px';
-  });
-  restyle();
-
   /* Three seamless copies - [clone][real][clone] - so the closed loop can
      re-normalize the scroll position across a copy boundary invisibly. */
   const real = items.map(x => x.fig);
@@ -192,6 +180,11 @@ async function init() {
 
   if (!items.length) { $('#caption').textContent = 'No images yet'; return; }
   real[Math.max(0, items.findIndex(x => x.m.slug === 'pulse' && x.i.file === '1-_MG_6955'))].querySelector('img').loading = 'eager';
+  /* One sizing pass for every figure (real and cloned) and the sources'
+     sizes attribute. It runs synchronously right after the appends, so the
+     geometry is explicit before the first paint - no layout shift as
+     images load, and the loop's copy width never changes under the scroll
+     position. The resize handler reuses this same function. */
   const resizeFigures = () => {
     figs.forEach((f, k) => {
       const [w, h] = items[k % items.length].size();
@@ -202,10 +195,11 @@ async function init() {
       f.querySelectorAll('source').forEach(s => { s.sizes = w + 'px'; });
     });
   };
+  resizeFigures();
   wire(items, figs, resizeFigures);
 }
 
-function wire(items, figs, restyle) {
+function wire(items, figs, resizeFigures) {
   const N = items.length;
   /* Cached in measure() (which runs on every resize): reading scrollWidth
      on every wheel event and drag step forces layout work for a value that
@@ -378,7 +372,7 @@ function wire(items, figs, restyle) {
     const ratio = M > 0 ? vp.scrollLeft / M : 0;
     settling = true;
     stop();
-    restyle();
+    resizeFigures();
     measure();
     vp.scrollLeft = target = clamp(ratio * max());
     cur = nearest(0);
@@ -405,7 +399,9 @@ function wire(items, figs, restyle) {
      never moves the strip for them. On release a fast flick keeps
      floating with velocity momentum (capped at FLING_MAX slots), eased
      out by the same GLIDE as the wheel; a slow swipe simply rests where
-     it ends. No snap: the strip never pulls toward an image. */
+     it ends. No snap: the strip never pulls toward an image. Two-finger
+     gestures stay browser-owned: the second finger is not the primary
+     pointer, and the browser cancels the first when it takes over. */
   document.addEventListener('pointerdown', e => {
     if (e.pointerType !== 'touch' || !e.isPrimary || dlg.open) return;
     stop();
@@ -416,68 +412,46 @@ function wire(items, figs, restyle) {
     vp.dataset.touched = '1';
   }, { passive: true });
 
-  /* Native touch events mirror the pointer path above: every iOS version
-     fires them, even where pointer events misbehave. When both fire (modern
-     iOS: pointerdown then touchstart) the touch path takes over (its anchor
-     replaces the pointer one) and the pointermove handler then ignores the
-     gesture (id mismatch) - both compute the same destination anyway.
-     preventDefault on the move (horizontal gestures only; vertical stays
-     native for pull-to-refresh) stops old Safari, which has no touch-action
-     support, from hijacking a horizontal drag. Two-finger gestures (pinch)
-     are left to the browser. */
-  document.addEventListener('touchstart', e => {
-    if (dlg.open || e.touches.length !== 1) return;
-    const t = e.touches[0];
-    stop();
-    target = vp.scrollLeft;
-    down = { x: t.clientX, y: t.clientY, s: vp.scrollLeft, t0: vp.scrollLeft, id: 'touch', touch: true };
-    moved = 0;
-    suppressClick = false;
-    vp.dataset.touched = '1';
-  }, { passive: true });
   /* Recent drag samples, for flick velocity at release. */
   const sample = dx => {
     if (!down) return;
     (down.sp = down.sp || []).push([performance.now(), dx]);
     if (down.sp.length > 5) down.sp.shift();
   };
-  document.addEventListener('touchmove', e => {
-    if (!down || down.id !== 'touch') return;
-    if (e.touches.length !== 1) { endDrag(); return; }
-    const t = e.touches[0];
-    const dx = t.clientX - down.x, dy = t.clientY - down.y;
-    moved = Math.max(moved, Math.abs(dx), Math.abs(dy));
-    /* Axis ownership, decided once past the tap slop: vertical stays
-       native (pull-to-refresh); only horizontal drives the strip. */
-    if (!down.axis) {
-      if (moved <= 8) return;
-      down.axis = Math.abs(dx) >= Math.abs(dy) ? 'h' : 'v';
-      if (down.axis === 'v') { endDrag(); return; }
-    }
-    if (down.axis !== 'h') return;
-    e.preventDefault();
-    sample(dx);
-    vp.classList.add('drag');
-    target = clamp(down.t0 - dx);
-    kick();
-  }, { passive: false });
-  /* Lazy wrappers: endDrag is declared further below (const, TDZ). */
-  document.addEventListener('touchend', () => endDrag());
-  document.addEventListener('touchcancel', () => endDrag());
+
+  /* One Pointer Events move path for both drag kinds. Touch: horizontal
+     ownership past the 8px slop, velocity-sampled for the fling, eased by
+     the wheel's glide. Mouse: direct 1:1 movement, captured once it is a
+     real drag so a plain click still reaches the img (click-to-zoom).
+     Nothing here calls preventDefault - touch-action: pan-y in CSS owns
+     the native/scripted split for touch. */
   document.addEventListener('pointermove', e => {
-    if (!down || !down.touch || e.pointerId !== down.id) return;
+    if (!down || e.pointerId !== down.id) return;
     const dx = e.clientX - down.x, dy = e.clientY - down.y;
-    moved = Math.max(moved, Math.abs(dx), Math.abs(dy));
-    if (!down.axis) {
-      if (moved <= 8) return;
-      down.axis = Math.abs(dx) >= Math.abs(dy) ? 'h' : 'v';
-      if (down.axis === 'v') { endDrag(); return; }
+    if (down.touch) {
+      moved = Math.max(moved, Math.abs(dx), Math.abs(dy));
+      /* Axis ownership, decided once past the tap slop: vertical stays
+         native (pull-to-refresh); only horizontal drives the strip. */
+      if (!down.axis) {
+        if (moved <= 8) return;
+        down.axis = Math.abs(dx) >= Math.abs(dy) ? 'h' : 'v';
+        if (down.axis === 'v') { endDrag(); return; }
+      }
+      if (down.axis !== 'h') return;
+      sample(dx);
+      vp.classList.add('drag');
+      target = clamp(down.t0 - dx);
+      kick();
+      return;
     }
-    if (down.axis !== 'h') return;
-    sample(dx);
-    vp.classList.add('drag');
-    target = clamp(down.t0 - dx);
-    kick();
+    if (e.pointerType === 'mouse' && !(e.buttons & 1)) { endDrag(); return; }
+    moved = Math.abs(dx);
+    if (moved > 4) {
+      if (!down.captured) { try { vp.setPointerCapture(down.id); down.captured = true; } catch (_) {} }
+      vp.classList.add('drag');
+      target = clamp(down.s - dx);
+      vp.scrollLeft = target;
+    }
   }, { passive: true });
   /* A drag that ends over a link must not activate it. */
   document.addEventListener('click', e => {
@@ -486,25 +460,12 @@ function wire(items, figs, restyle) {
     e.preventDefault();
     e.stopPropagation();
   }, true);
-  vp.addEventListener('pointermove', e => {
-    if (!down || down.touch || e.pointerId !== down.id) return;
-    if (e.pointerType === 'mouse' && !(e.buttons & 1)) { endDrag(); return; }
-    moved = Math.abs(e.clientX - down.x);
-    if (moved > 4) {
-      /* Capture only once it is a real drag, so a plain click still reaches
-         the img (click-to-zoom). */
-      if (!down.captured) { try { vp.setPointerCapture(down.id); down.captured = true; } catch (_) {} }
-      vp.classList.add('drag');
-      target = clamp(down.s - (e.clientX - down.x));
-      vp.scrollLeft = target;
-    }
-  });
   const endDrag = () => {
     if (!down) return;
     const id = down.id, wasTouch = !!down.touch, axis = down.axis, sp = down.sp;
     down = null;
     if (moved > 4) suppressClick = true;
-    if (id !== 'touch' && vp.hasPointerCapture(id)) vp.releasePointerCapture(id);
+    if (vp.hasPointerCapture(id)) vp.releasePointerCapture(id);
     vp.classList.remove('drag');
     /* Touch fling, horizontal gestures only, purely velocity-based: a
        fast flick keeps floating after the finger lifts (a couple of image
@@ -548,10 +509,10 @@ function wire(items, figs, restyle) {
       e.preventDefault();
       /* The strip holds three copies of each photo (and a small set repeats
          on screen): zoom from the copy nearest the middle of the screen. */
-      const base = items[cur % items.length].fig.querySelector('img');
-      let from = base, best = Infinity;
+      const centreImg = items[cur % items.length].fig.querySelector('img');
+      let from = centreImg, best = Infinity;
       track.querySelectorAll('img').forEach(i => {
-        if (i.dataset.full !== base.dataset.full) return;
+        if (i.dataset.full !== centreImg.dataset.full) return;
         const r = i.getBoundingClientRect();
         const dist = Math.abs(r.left + r.width / 2 - innerWidth / 2);
         if (dist < best) { best = dist; from = i; }
