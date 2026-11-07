@@ -69,13 +69,12 @@ async function loadJSON(url) {
   return response.json();
 }
 
-async function init() {
-  const [site, projects] = await Promise.all([
-    loadJSON('config/site.json'),
-    loadJSON('assets/projects/manifest.json')
-  ]);
-
-  /* ---- Site text and links ---- */
+/* ---- Site text and links ----
+   site.json only rewrites bio/contact/social text that index.html already
+   carries, so it never gates the gallery: it is fetched in parallel and
+   applied whenever it arrives. replaceChildren keeps the no-duplication
+   behaviour, and the initial HTML stays as the fallback if this fails. */
+function applySiteText(site) {
   /* Bio: plain text, except the optional site.bioLink span of text, which
      becomes a real link (currently Vitamin Studios). */
   const bio = $('#bio');
@@ -106,6 +105,14 @@ async function init() {
     a.rel = 'me noopener';
     $('#socials').append(a);
   });
+}
+
+async function init() {
+  /* Only the manifest is on the gallery's critical path. */
+  loadJSON('config/site.json')
+    .then(applySiteText)
+    .catch(err => console.warn('site.json not applied; keeping the initial page text.', err));
+  const projects = await loadJSON('assets/projects/manifest.json');
 
   /* ---- Projects (from the generated manifest) ---- */
   const items = [];
