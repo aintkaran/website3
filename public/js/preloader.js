@@ -14,7 +14,7 @@
  * an unsupported browser: no animation, straight in. The inline failsafe in
  * index.html hides the overlay if this module never runs.
  */
-import './vendor/scritto.js';
+import './vendor/scritto.js?v=1';
 
 const WORDS = ['Design', 'Photography', 'Product', 'aintkaran'];
 const STEP_MS = 750;       // gap between rolls; Scritto's roll is 550ms
