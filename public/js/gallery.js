@@ -69,6 +69,18 @@ async function loadJSON(url) {
   return response.json();
 }
 
+/* URLs from site.json land in href verbatim; only the schemes a person
+   would legitimately publish are allowed through. Anything else is
+   skipped with a console warning, never assigned. */
+const LINK_SCHEMES = ['https:', 'http:', 'mailto:', 'tel:', 'sms:'];
+const safeHref = url => {
+  try {
+    if (LINK_SCHEMES.includes(new URL(url, location.href).protocol)) return url;
+  } catch (_) {}
+  console.warn('site.json: skipped a link with an invalid or disallowed URL:', url);
+  return null;
+};
+
 /* ---- Site text and links ----
    site.json only rewrites bio/contact/social text that index.html already
    carries, so it never gates the gallery: it is fetched in parallel and
@@ -81,10 +93,11 @@ function applySiteText(site) {
   bio.replaceChildren();
   $('#contact').replaceChildren();
   $('#socials').replaceChildren();
-  if (site.bioLink && site.bio.includes(site.bioLink.text)) {
+  const bioHref = site.bioLink ? safeHref(site.bioLink.url) : null;
+  if (site.bioLink && bioHref && site.bio.includes(site.bioLink.text)) {
     const [pre, post] = site.bio.split(site.bioLink.text);
     const a = el('a', '', site.bioLink.text);
-    a.href = site.bioLink.url;
+    a.href = bioHref;
     a.target = '_blank';
     a.rel = 'noopener';
     bio.append(pre, a, post || '');
@@ -94,13 +107,17 @@ function applySiteText(site) {
   $('#copyright').textContent = site.copyright;
   $('#loc').textContent = site.location || '';
   (site.contact || []).forEach(function (c) {
+    const href = safeHref(c.url);
+    if (!href) return;
     const a = el('a', '', c.label);
-    a.href = c.url;
+    a.href = href;
     $('#contact').append(a);
   });
   (site.social || []).forEach(function (s) {
+    const href = safeHref(s.url);
+    if (!href) return;
     const a = el('a', '', s.label);
-    a.href = s.url;
+    a.href = href;
     a.target = '_blank';
     a.rel = 'me noopener';
     $('#socials').append(a);
