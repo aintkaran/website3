@@ -415,6 +415,19 @@ dialog#zoom img { width: 100%; height: 100%; object-fit: contain; }
   .stage { height: calc(100vh + 1px); height: calc(100dvh + 1px); }
 }
 
+/* Visually hidden but still in the DOM for crawlers and readers (the
+   EXIF span). A class, not an inline style, so the CSP needs no
+   style-src exception. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 /* ---- Skip link: visually hidden until keyboard focus ---- */
 .skip-link {
   position: absolute;

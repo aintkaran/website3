@@ -94,24 +94,14 @@
   <dialog id="zoom" aria-label="Enlarged photo. Click or press Escape to close."><picture><source id="zoomsource" type="image/jxl"><img id="zoomimg" alt=""></picture></dialog>
 
   <script type="module" src="js/preloader.js?v=3"></script>
-  <script>
-    /* Preloader failsafe: if the module never runs (old browser, blocked
-       script), hide the overlay so nobody is stuck behind it. */
-    setTimeout(function () {
-      var p = document.getElementById('preloader');
-      if (p && !p.dataset.done) { p.classList.add('done'); setTimeout(function () { p.remove(); }, 400); }
-    }, 4000);
-  </script>
+  <!-- Preloader failsafe: if the module never runs (old browser, blocked
+       script), hide the overlay so nobody is stuck behind it. -->
+  <script src="js/preloader-failsafe.js?v=1" defer></script>
   <script src="js/gallery.js?v=12" defer></script>
-  <!-- Vercel Speed Insights (plain-HTML integration; served by Vercel on deploy) -->
-  <script>
-    window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
-  </script>
+  <!-- Vercel Speed Insights + Web Analytics (plain-HTML integration; the
+       scripts are served by Vercel on deploy, the queue stubs are local) -->
+  <script src="js/vercel-stubs.js?v=1" defer></script>
   <script defer src="/_vercel/speed-insights/script.js"></script>
-  <!-- Vercel Web Analytics (plain-HTML integration: no package needed; script served by Vercel once Analytics is enabled for the project) -->
-  <script>
-    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-  </script>
   <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
