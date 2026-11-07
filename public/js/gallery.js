@@ -604,15 +604,19 @@ function wire(items, figs, restyle) {
     $('#zoomimg').removeAttribute('src');
   });
 
-  /* Start with the pulse photo 1-_MG_6955 centred (falls back to the first image). Geometry is explicit, so this is
-     exact from the first frame. */
+  /* Start with the pulse photo 1-_MG_6955 centred (falls back to the first
+     image). Geometry is explicit, so measure and position run synchronously
+     right after the copies are appended, before the first paint: the strip
+     never rests at scrollLeft 0 for a frame and lazy loading sees the real
+     position immediately. */
   const centreFirst = () => {
     if (figs.length && !vp.dataset.touched) {
       vp.scrollLeft = target = clamp(centreOf(figs[N + Math.max(0, items.findIndex(x => x.m.slug === 'pulse' && x.i.file === '1-_MG_6955'))]));
       applyScale();
     }
   };
-  requestAnimationFrame(centreFirst);
+  measure();
+  centreFirst();
   vp.addEventListener('pointerdown', () => { vp.dataset.touched = '1'; }, { once: true });
   addEventListener('wheel', () => { vp.dataset.touched = '1'; }, { once: true, passive: true });
 
