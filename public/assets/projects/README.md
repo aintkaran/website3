@@ -12,4 +12,4 @@ Camera/lens/exposure details are a separate EXIF text field. GPS, serial numbers
 
 Deleting a source project removes its public outputs on the next successful sync. The repair workflow can regenerate missing outputs only while the source still exists. It does not restore intentionally deleted source photos.
 
-The homepage's social preview tags reference an export here. When deleting or renaming that photo, update both `og:image` and `twitter:image` in `public/index.html` and verify the replacement returns an image, not a 404.
+The homepage's social preview tags reference an export here. When deleting or renaming that photo, update `og:image`/`twitter:image` plus the matching `og:image:width`/`og:image:height` and `twitter:image:alt` in `public/index.html`, and verify the replacement returns an image, not a 404.

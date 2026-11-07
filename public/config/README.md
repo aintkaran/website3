@@ -1,6 +1,6 @@
 # Site text and links
 
-`site.json` supplies the bio and its linked phrase, copyright, location, contact links and social links in display order. The runtime reads it when initializing the gallery.
+`site.json` supplies the bio and its linked phrase, copyright, location, contact links and social links in display order. The gallery loads it in parallel and applies it whenever it arrives; it is not on the gallery's critical path. URLs are checked before use: only https, http, mailto, tel and sms links are applied.
 
 The same approved bio/contact/social content is also present in `public/index.html` so it is available before JavaScript. When changing those fields, update that initial HTML too. The gallery replaces the initial text/links rather than appending duplicates.
 
