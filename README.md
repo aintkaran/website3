@@ -32,7 +32,7 @@ JPEG XL sources have WebP fallbacks. The pipeline exports widths up to 600/1200/
 
 ## Open source libraries and fonts
 - **Scritto** (`@scritto/core` v0.1.0, MIT) - the rolling-word preloader animation, vendored at `public/js/vendor/scritto.js` so the site has no runtime CDN dependency. https://github.com/JaceThings/Scritto
-- **TikTok Sans** (SIL Open Font License 1.1) - the site typeface, served as version-pinned `@fontsource-variable/tiktok-sans` 5.3.0 WOFF2 subsets via jsDelivr, declared in `public/css/fonts.css`. Font: https://github.com/tiktok/TikTokSans - Fontsource: https://fontsource.org/fonts/tiktok-sans
+- **TikTok Sans** (SIL Open Font License 1.1) - the site typeface, self-hosted in `public/assets/fonts/` as the version-pinned `@fontsource-variable/tiktok-sans` 5.3.0 WOFF2 subsets (OFL.txt alongside), declared in `public/css/fonts.css`. Font: https://github.com/tiktok/TikTokSans - Fontsource: https://fontsource.org/fonts/tiktok-sans
 - **serve** (MIT) - the local dev server behind `npm run dev`. https://github.com/vercel/serve
 
 Vercel Speed Insights and Web Analytics are platform scripts served by Vercel, not bundled libraries. Everything else in `public/js` and `public/css` is written for this site. The image pipeline's libraries are credited in the `originals` README.
