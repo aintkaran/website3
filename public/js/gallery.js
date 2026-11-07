@@ -69,23 +69,35 @@ async function loadJSON(url) {
   return response.json();
 }
 
-async function init() {
-  const [site, projects] = await Promise.all([
-    loadJSON('config/site.json'),
-    loadJSON('assets/projects/manifest.json')
-  ]);
+/* URLs from site.json land in href verbatim; only the schemes a person
+   would legitimately publish are allowed through. Anything else is
+   skipped with a console warning, never assigned. */
+const LINK_SCHEMES = ['https:', 'http:', 'mailto:', 'tel:', 'sms:'];
+const safeHref = url => {
+  try {
+    if (LINK_SCHEMES.includes(new URL(url, location.href).protocol)) return url;
+  } catch (_) {}
+  console.warn('site.json: skipped a link with an invalid or disallowed URL:', url);
+  return null;
+};
 
-  /* ---- Site text and links ---- */
+/* ---- Site text and links ----
+   site.json only rewrites bio/contact/social text that index.html already
+   carries, so it never gates the gallery: it is fetched in parallel and
+   applied whenever it arrives. replaceChildren keeps the no-duplication
+   behaviour, and the initial HTML stays as the fallback if this fails. */
+function applySiteText(site) {
   /* Bio: plain text, except the optional site.bioLink span of text, which
      becomes a real link (currently Vitamin Studios). */
   const bio = $('#bio');
   bio.replaceChildren();
   $('#contact').replaceChildren();
   $('#socials').replaceChildren();
-  if (site.bioLink && site.bio.includes(site.bioLink.text)) {
+  const bioHref = site.bioLink ? safeHref(site.bioLink.url) : null;
+  if (site.bioLink && bioHref && site.bio.includes(site.bioLink.text)) {
     const [pre, post] = site.bio.split(site.bioLink.text);
     const a = el('a', '', site.bioLink.text);
-    a.href = site.bioLink.url;
+    a.href = bioHref;
     a.target = '_blank';
     a.rel = 'noopener';
     bio.append(pre, a, post || '');
@@ -95,17 +107,29 @@ async function init() {
   $('#copyright').textContent = site.copyright;
   $('#loc').textContent = site.location || '';
   (site.contact || []).forEach(function (c) {
+    const href = safeHref(c.url);
+    if (!href) return;
     const a = el('a', '', c.label);
-    a.href = c.url;
+    a.href = href;
     $('#contact').append(a);
   });
   (site.social || []).forEach(function (s) {
+    const href = safeHref(s.url);
+    if (!href) return;
     const a = el('a', '', s.label);
-    a.href = s.url;
+    a.href = href;
     a.target = '_blank';
     a.rel = 'me noopener';
     $('#socials').append(a);
   });
+}
+
+async function init() {
+  /* Only the manifest is on the gallery's critical path. */
+  loadJSON('config/site.json')
+    .then(applySiteText)
+    .catch(err => console.warn('site.json not applied; keeping the initial page text.', err));
+  const projects = await loadJSON('assets/projects/manifest.json');
 
   /* ---- Projects (from the generated manifest) ---- */
   const items = [];
@@ -146,26 +170,13 @@ async function init() {
     f.append(pic);
     /* EXIF (camera, lens, exposure) as plain text for crawlers and agents. Visually hidden for now. */
     if (i.exif) {
-      const x = el('span', 'exif', i.exif);
+      const x = el('span', 'exif visually-hidden', i.exif);
       x.setAttribute('aria-hidden', 'true');
-      x.style.cssText = 'position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap';
       f.append(x);
     }
     it.fig = f;
     it.size = () => fitBox(i.width, i.height);
   });
-
-  /* Explicit geometry before the figures enter the DOM: no layout shift as
-     images load, and the loop's copy width never changes under the scroll
-     position. */
-  const restyle = () => items.forEach(it => {
-    const [w, h] = it.size();
-    it.fig.style.width = w + 'px';
-    const im = it.fig.querySelector('img');
-    im.style.width = w + 'px';
-    im.style.height = h + 'px';
-  });
-  restyle();
 
   /* Three seamless copies - [clone][real][clone] - so the closed loop can
      re-normalize the scroll position across a copy boundary invisibly. */
@@ -185,6 +196,11 @@ async function init() {
 
   if (!items.length) { $('#caption').textContent = 'No images yet'; return; }
   real[Math.max(0, items.findIndex(x => x.m.slug === 'pulse' && x.i.file === '1-_MG_6955'))].querySelector('img').loading = 'eager';
+  /* One sizing pass for every figure (real and cloned) and the sources'
+     sizes attribute. It runs synchronously right after the appends, so the
+     geometry is explicit before the first paint - no layout shift as
+     images load, and the loop's copy width never changes under the scroll
+     position. The resize handler reuses this same function. */
   const resizeFigures = () => {
     figs.forEach((f, k) => {
       const [w, h] = items[k % items.length].size();
@@ -195,12 +211,17 @@ async function init() {
       f.querySelectorAll('source').forEach(s => { s.sizes = w + 'px'; });
     });
   };
+  resizeFigures();
   wire(items, figs, resizeFigures);
 }
 
-function wire(items, figs, restyle) {
+function wire(items, figs, resizeFigures) {
   const N = items.length;
-  const max = () => vp.scrollWidth - vp.clientWidth;
+  /* Cached in measure() (which runs on every resize): reading scrollWidth
+     on every wheel event and drag step forces layout work for a value that
+     only changes with geometry. */
+  let maxScroll = 0;
+  const max = () => maxScroll;
   const clamp = v => Math.max(0, Math.min(max(), v));
   const centreOf = f => f.offsetLeft + f.offsetWidth / 2 - vp.clientWidth / 2;
   /* One copy's width: positions exactly this far apart render identical
@@ -212,6 +233,7 @@ function wire(items, figs, restyle) {
   const measure = () => {
     cs = figs.map(f => f.offsetLeft + f.offsetWidth / 2);
     copyWidth = figs[N].offsetLeft - figs[0].offsetLeft;
+    maxScroll = vp.scrollWidth - vp.clientWidth;
   };
   measure();
 
@@ -255,11 +277,33 @@ function wire(items, figs, restyle) {
      units: 1.0 at the centre, NEIGHBOUR one slot away, smoothly interpolated
      with scroll progress, so the leaving image shrinks while the arriving
      one grows. */
+  /* Only figures within about one viewport width of the centre get
+     per-frame scale work. Anything further is fully off-screen (the widest
+     figure is capped at ~0.52 viewport widths, so nothing past one full
+     width can peek in), and the formula already gives it exactly NEIGHBOUR
+     with the same origin rule - the culled write is pixel-identical and
+     happens once per figure, not on every scroll event. Writes are skipped
+     when the computed value has not changed. */
+  const culled = new Array(figs.length).fill(false);
+  const lastTf = new Array(figs.length).fill('');
+  const lastOrg = new Array(figs.length).fill('');
   const applyScale = () => {
     if (cs.length !== figs.length) measure();
     const c = vp.scrollLeft + vp.clientWidth / 2;
+    const range = vp.clientWidth;
     for (let k = 0; k < figs.length; k++) {
       const fc = cs[k];
+      if (Math.abs(fc - c) > range) {
+        if (!culled[k]) {
+          culled[k] = true;
+          const org = fc >= c ? '0% 50%' : '100% 50%';
+          const tf = 'scale(' + NEIGHBOUR + ')';
+          figs[k].style.transformOrigin = lastOrg[k] = org;
+          figs[k].style.transform = lastTf[k] = tf;
+        }
+        continue;
+      }
+      culled[k] = false;
       const pitch = fc >= c
         ? (k > 0 ? fc - cs[k - 1] : cs[k + 1] - fc)
         : (k < figs.length - 1 ? cs[k + 1] - fc : fc - cs[k - 1]);
@@ -269,8 +313,10 @@ function wire(items, figs, restyle) {
          instead of pulling away from it, so the side previews survive on
          narrow screens too. The origin flips at the centre, where the
          scale is 1, so the flip itself is invisible. */
-      figs[k].style.transformOrigin = fc >= c ? '0% 50%' : '100% 50%';
-      figs[k].style.transform = 'scale(' + (1 - (1 - NEIGHBOUR) * t).toFixed(4) + ')';
+      const org = fc >= c ? '0% 50%' : '100% 50%';
+      const tf = 'scale(' + (1 - (1 - NEIGHBOUR) * t).toFixed(4) + ')';
+      if (org !== lastOrg[k]) figs[k].style.transformOrigin = lastOrg[k] = org;
+      if (tf !== lastTf[k]) figs[k].style.transform = lastTf[k] = tf;
     }
   };
 
@@ -292,12 +338,19 @@ function wire(items, figs, restyle) {
   };
 
   /* One static title + caption block, centred under the gallery at a fixed
-     vertical position. Text swaps instantly; the block itself never moves. */
-  const placeCaption = () => { $('#nowshowing').style.top = captionTop() + 'px'; };
+     vertical position. Text swaps instantly; the block itself never moves.
+     The block is display:none in style.css while captions are reworked, so
+     all of this is gated on one flag read from the live style: deleting
+     that single CSS rule re-enables placement, text updates and the
+     aria-live region, with no other code change. */
+  const nowShowing = $('#nowshowing');
+  const captionsOn = getComputedStyle(nowShowing).display !== 'none';
+  if (captionsOn) nowShowing.setAttribute('aria-live', 'polite');
+  const placeCaption = () => { if (captionsOn) nowShowing.style.top = captionTop() + 'px'; };
   placeCaption();
   addEventListener('resize', placeCaption);
   const show = r => {
-    if (r === shown) return;
+    if (!captionsOn || r === shown) return;
     shown = r;
     const { i } = items[r];
     $('#title').textContent = i.title || '';
@@ -342,7 +395,7 @@ function wire(items, figs, restyle) {
     const ratio = M > 0 ? vp.scrollLeft / M : 0;
     settling = true;
     stop();
-    restyle();
+    resizeFigures();
     measure();
     vp.scrollLeft = target = clamp(ratio * max());
     cur = nearest(0);
@@ -369,7 +422,9 @@ function wire(items, figs, restyle) {
      never moves the strip for them. On release a fast flick keeps
      floating with velocity momentum (capped at FLING_MAX slots), eased
      out by the same GLIDE as the wheel; a slow swipe simply rests where
-     it ends. No snap: the strip never pulls toward an image. */
+     it ends. No snap: the strip never pulls toward an image. Two-finger
+     gestures stay browser-owned: the second finger is not the primary
+     pointer, and the browser cancels the first when it takes over. */
   document.addEventListener('pointerdown', e => {
     if (e.pointerType !== 'touch' || !e.isPrimary || dlg.open) return;
     stop();
@@ -380,68 +435,46 @@ function wire(items, figs, restyle) {
     vp.dataset.touched = '1';
   }, { passive: true });
 
-  /* Native touch events mirror the pointer path above: every iOS version
-     fires them, even where pointer events misbehave. When both fire (modern
-     iOS: pointerdown then touchstart) the touch path takes over (its anchor
-     replaces the pointer one) and the pointermove handler then ignores the
-     gesture (id mismatch) - both compute the same destination anyway.
-     preventDefault on the move (horizontal gestures only; vertical stays
-     native for pull-to-refresh) stops old Safari, which has no touch-action
-     support, from hijacking a horizontal drag. Two-finger gestures (pinch)
-     are left to the browser. */
-  document.addEventListener('touchstart', e => {
-    if (dlg.open || e.touches.length !== 1) return;
-    const t = e.touches[0];
-    stop();
-    target = vp.scrollLeft;
-    down = { x: t.clientX, y: t.clientY, s: vp.scrollLeft, t0: vp.scrollLeft, id: 'touch', touch: true };
-    moved = 0;
-    suppressClick = false;
-    vp.dataset.touched = '1';
-  }, { passive: true });
   /* Recent drag samples, for flick velocity at release. */
   const sample = dx => {
     if (!down) return;
     (down.sp = down.sp || []).push([performance.now(), dx]);
     if (down.sp.length > 5) down.sp.shift();
   };
-  document.addEventListener('touchmove', e => {
-    if (!down || down.id !== 'touch') return;
-    if (e.touches.length !== 1) { endDrag(); return; }
-    const t = e.touches[0];
-    const dx = t.clientX - down.x, dy = t.clientY - down.y;
-    moved = Math.max(moved, Math.abs(dx), Math.abs(dy));
-    /* Axis ownership, decided once past the tap slop: vertical stays
-       native (pull-to-refresh); only horizontal drives the strip. */
-    if (!down.axis) {
-      if (moved <= 8) return;
-      down.axis = Math.abs(dx) >= Math.abs(dy) ? 'h' : 'v';
-      if (down.axis === 'v') { endDrag(); return; }
-    }
-    if (down.axis !== 'h') return;
-    e.preventDefault();
-    sample(dx);
-    vp.classList.add('drag');
-    target = clamp(down.t0 - dx);
-    kick();
-  }, { passive: false });
-  /* Lazy wrappers: endDrag is declared further below (const, TDZ). */
-  document.addEventListener('touchend', () => endDrag());
-  document.addEventListener('touchcancel', () => endDrag());
+
+  /* One Pointer Events move path for both drag kinds. Touch: horizontal
+     ownership past the 8px slop, velocity-sampled for the fling, eased by
+     the wheel's glide. Mouse: direct 1:1 movement, captured once it is a
+     real drag so a plain click still reaches the img (click-to-zoom).
+     Nothing here calls preventDefault - touch-action: pan-y in CSS owns
+     the native/scripted split for touch. */
   document.addEventListener('pointermove', e => {
-    if (!down || !down.touch || e.pointerId !== down.id) return;
+    if (!down || e.pointerId !== down.id) return;
     const dx = e.clientX - down.x, dy = e.clientY - down.y;
-    moved = Math.max(moved, Math.abs(dx), Math.abs(dy));
-    if (!down.axis) {
-      if (moved <= 8) return;
-      down.axis = Math.abs(dx) >= Math.abs(dy) ? 'h' : 'v';
-      if (down.axis === 'v') { endDrag(); return; }
+    if (down.touch) {
+      moved = Math.max(moved, Math.abs(dx), Math.abs(dy));
+      /* Axis ownership, decided once past the tap slop: vertical stays
+         native (pull-to-refresh); only horizontal drives the strip. */
+      if (!down.axis) {
+        if (moved <= 8) return;
+        down.axis = Math.abs(dx) >= Math.abs(dy) ? 'h' : 'v';
+        if (down.axis === 'v') { endDrag(); return; }
+      }
+      if (down.axis !== 'h') return;
+      sample(dx);
+      vp.classList.add('drag');
+      target = clamp(down.t0 - dx);
+      kick();
+      return;
     }
-    if (down.axis !== 'h') return;
-    sample(dx);
-    vp.classList.add('drag');
-    target = clamp(down.t0 - dx);
-    kick();
+    if (e.pointerType === 'mouse' && !(e.buttons & 1)) { endDrag(); return; }
+    moved = Math.abs(dx);
+    if (moved > 4) {
+      if (!down.captured) { try { vp.setPointerCapture(down.id); down.captured = true; } catch (_) {} }
+      vp.classList.add('drag');
+      target = clamp(down.s - dx);
+      vp.scrollLeft = target;
+    }
   }, { passive: true });
   /* A drag that ends over a link must not activate it. */
   document.addEventListener('click', e => {
@@ -450,25 +483,12 @@ function wire(items, figs, restyle) {
     e.preventDefault();
     e.stopPropagation();
   }, true);
-  vp.addEventListener('pointermove', e => {
-    if (!down || down.touch || e.pointerId !== down.id) return;
-    if (e.pointerType === 'mouse' && !(e.buttons & 1)) { endDrag(); return; }
-    moved = Math.abs(e.clientX - down.x);
-    if (moved > 4) {
-      /* Capture only once it is a real drag, so a plain click still reaches
-         the img (click-to-zoom). */
-      if (!down.captured) { try { vp.setPointerCapture(down.id); down.captured = true; } catch (_) {} }
-      vp.classList.add('drag');
-      target = clamp(down.s - (e.clientX - down.x));
-      vp.scrollLeft = target;
-    }
-  });
   const endDrag = () => {
     if (!down) return;
     const id = down.id, wasTouch = !!down.touch, axis = down.axis, sp = down.sp;
     down = null;
     if (moved > 4) suppressClick = true;
-    if (id !== 'touch' && vp.hasPointerCapture(id)) vp.releasePointerCapture(id);
+    if (vp.hasPointerCapture(id)) vp.releasePointerCapture(id);
     vp.classList.remove('drag');
     /* Touch fling, horizontal gestures only, purely velocity-based: a
        fast flick keeps floating after the finger lifts (a couple of image
@@ -512,10 +532,10 @@ function wire(items, figs, restyle) {
       e.preventDefault();
       /* The strip holds three copies of each photo (and a small set repeats
          on screen): zoom from the copy nearest the middle of the screen. */
-      const base = items[cur % items.length].fig.querySelector('img');
-      let from = base, best = Infinity;
+      const centreImg = items[cur % items.length].fig.querySelector('img');
+      let from = centreImg, best = Infinity;
       track.querySelectorAll('img').forEach(i => {
-        if (i.dataset.full !== base.dataset.full) return;
+        if (i.dataset.full !== centreImg.dataset.full) return;
         const r = i.getBoundingClientRect();
         const dist = Math.abs(r.left + r.width / 2 - innerWidth / 2);
         if (dist < best) { best = dist; from = i; }
@@ -597,15 +617,19 @@ function wire(items, figs, restyle) {
     $('#zoomimg').removeAttribute('src');
   });
 
-  /* Start with the pulse photo 1-_MG_6955 centred (falls back to the first image). Geometry is explicit, so this is
-     exact from the first frame. */
+  /* Start with the pulse photo 1-_MG_6955 centred (falls back to the first
+     image). Geometry is explicit, so measure and position run synchronously
+     right after the copies are appended, before the first paint: the strip
+     never rests at scrollLeft 0 for a frame and lazy loading sees the real
+     position immediately. */
   const centreFirst = () => {
     if (figs.length && !vp.dataset.touched) {
       vp.scrollLeft = target = clamp(centreOf(figs[N + Math.max(0, items.findIndex(x => x.m.slug === 'pulse' && x.i.file === '1-_MG_6955'))]));
       applyScale();
     }
   };
-  requestAnimationFrame(centreFirst);
+  measure();
+  centreFirst();
   vp.addEventListener('pointerdown', () => { vp.dataset.touched = '1'; }, { once: true });
   addEventListener('wheel', () => { vp.dataset.touched = '1'; }, { once: true, passive: true });
 

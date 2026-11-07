@@ -14,7 +14,7 @@
  * an unsupported browser: no animation, straight in. The inline failsafe in
  * index.html hides the overlay if this module never runs.
  */
-import './vendor/scritto.js';
+import './vendor/scritto.js?v=1';
 
 const WORDS = ['Design', 'Photography', 'Product', 'aintkaran'];
 const STEP_MS = 750;       // gap between rolls; Scritto's roll is 550ms
@@ -50,7 +50,14 @@ function reveal() {
    remaining photos stay lazy - we never gate on the whole gallery. */
 const fontReady = document.fonts ? document.fonts.ready : Promise.resolve();
 const openingImageReady = new Promise((resolve) => {
-  const done = () => { clearTimeout(timer); resolve(); };
+  let mo = null;
+  const done = () => {
+    clearTimeout(timer);
+    /* Every exit path disconnects the observer: image ready, error,
+       missing track and the MAX_WAIT_MS cap all land here. */
+    if (mo) { mo.disconnect(); mo = null; }
+    resolve();
+  };
   const timer = setTimeout(done, MAX_WAIT_MS); // a missing image must not hold us
   const watch = (img) => {
     if (img.complete && img.naturalWidth > 0) return done();
@@ -63,9 +70,12 @@ const openingImageReady = new Promise((resolve) => {
   if (first) return watch(first);
   const track = document.getElementById('track');
   if (!track) return done();
-  const mo = new MutationObserver(() => {
+  mo = new MutationObserver(() => {
     const img = track.querySelector('img');
-    if (img) { mo.disconnect(); watch(img); }
+    if (!img) return;
+    mo.disconnect();
+    mo = null;
+    watch(img); // resolves on load/error, or now if already complete
   });
   mo.observe(track, { childList: true, subtree: true });
 });
@@ -76,11 +86,10 @@ if (!el || reduce || !capable) {
 } else {
   const started = performance.now();
   text.value = WORDS[0]; // first word without motion
-  const timers = [];
   let t = STEP_MS;
   for (let i = 1; i < WORDS.length; i++) {
     const w = WORDS[i];
-    timers.push(setTimeout(() => text.update(w), t)); // rolls only what changes
+    setTimeout(() => text.update(w), t); // rolls only what changes
     t += STEP_MS;
   }
   ready.then(() => {

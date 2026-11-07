@@ -14,10 +14,13 @@
 <meta property="og:description" content="Karan is a multi-disciplinary creative - photography, design, business, media, tech. Currently at Vitamin Studios. Based in Mumbai.">
 <meta property="og:url" content="https://aintkaran.vercel.app/">
 <meta property="og:image" content="https://aintkaran.vercel.app/assets/projects/pulse/web/1-_MG_6955-1200.webp">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="839">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="aintkaran - Karan | Photography, Design & Creative Portfolio">
 <meta name="twitter:description" content="Karan is a multi-disciplinary creative - photography, design, business, media, tech. Currently at Vitamin Studios. Based in Mumbai.">
 <meta name="twitter:image" content="https://aintkaran.vercel.app/assets/projects/pulse/web/1-_MG_6955-1200.webp">
+<meta name="twitter:image:alt" content="A woman with long windblown dark hair riding a white horse past green trees, wearing a brown shirt, wide studded belt and green striped skirt.">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -42,9 +45,16 @@
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFCF0">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#100F0F">
 <meta name="description" content="aintkaran is the portfolio of Karan, a multi-disciplinary creative in Mumbai - photography, design, business, media, tech. Currently at Vitamin Studios.">
-<link rel="stylesheet" href="css/fonts.css">
-<link rel="stylesheet" href="css/caption.css">
-<link rel="stylesheet" href="css/style.css?v=12">
+<!-- Critical-path preloads: the gallery's data, the opening photo (same
+     pulse/1-_MG_6955 WebP set as og:image) and the preloader modules. -->
+<link rel="preload" as="fetch" href="assets/projects/manifest.json" crossorigin>
+<link rel="preload" as="image" href="assets/projects/pulse/web/1-_MG_6955-1200.webp" imagesrcset="assets/projects/pulse/web/1-_MG_6955-600.webp 600w, assets/projects/pulse/web/1-_MG_6955-1200.webp 1200w" imagesizes="(max-width: 640px) 62vw, 52vw">
+<link rel="modulepreload" href="js/preloader.js?v=4">
+<link rel="modulepreload" href="js/vendor/scritto.js?v=1">
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/tiktok-sans-latin-opsz-normal.woff2" crossorigin>
+<link rel="stylesheet" href="css/fonts.css?v=2">
+<link rel="stylesheet" href="css/caption.css?v=2">
+<link rel="stylesheet" href="css/style.css?v=13">
 </head>
 <body>
   <a class="skip-link" href="#viewport">Skip to gallery</a>
@@ -64,8 +74,10 @@
     <section id="viewport" class="viewport" tabindex="0" aria-label="Image gallery. Scroll or use arrow keys. Press Enter to zoom the centred photo.">
       <div id="track" class="track"></div>
     </section>
-    <!-- One static title + caption, centred directly under the focused image. -->
-    <div id="nowshowing" class="now-showing" aria-live="polite">
+    <!-- One static title + caption, centred directly under the focused image.
+         No aria-live while the block is display:none; gallery.js re-adds it
+         if the block is shown again. -->
+    <div id="nowshowing" class="now-showing">
       <p id="title" class="now-title"></p>
       <p id="caption" class="caption"></p>
     </div>
@@ -84,25 +96,15 @@
 
   <dialog id="zoom" aria-label="Enlarged photo. Click or press Escape to close."><picture><source id="zoomsource" type="image/jxl"><img id="zoomimg" alt=""></picture></dialog>
 
-  <script type="module" src="js/preloader.js?v=2"></script>
-  <script>
-    /* Preloader failsafe: if the module never runs (old browser, blocked
-       script), hide the overlay so nobody is stuck behind it. */
-    setTimeout(function () {
-      var p = document.getElementById('preloader');
-      if (p && !p.dataset.done) { p.classList.add('done'); setTimeout(function () { p.remove(); }, 400); }
-    }, 4000);
-  </script>
-  <script src="js/gallery.js?v=11" defer></script>
-  <!-- Vercel Speed Insights (plain-HTML integration; served by Vercel on deploy) -->
-  <script>
-    window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
-  </script>
+  <script type="module" src="js/preloader.js?v=4"></script>
+  <!-- Preloader failsafe: if the module never runs (old browser, blocked
+       script), hide the overlay so nobody is stuck behind it. -->
+  <script src="js/preloader-failsafe.js?v=1" defer></script>
+  <script src="js/gallery.js?v=12" defer></script>
+  <!-- Vercel Speed Insights + Web Analytics (plain-HTML integration; the
+       scripts are served by Vercel on deploy, the queue stubs are local) -->
+  <script src="js/vercel-stubs.js?v=1" defer></script>
   <script defer src="/_vercel/speed-insights/script.js"></script>
-  <!-- Vercel Web Analytics (plain-HTML integration: no package needed; script served by Vercel once Analytics is enabled for the project) -->
-  <script>
-    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-  </script>
   <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

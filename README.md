@@ -26,13 +26,13 @@ The sync generates the project exports, project `meta.json` files, `manifest.jso
 
 A horizontal looping gallery, with mouse/trackpad, touch and keyboard controls. The opening photo is `pulse/1-_MG_6955`; image order is otherwise driven by the manifest. Clicking a photo opens it from the clicked thumbnail and closes back to that thumbnail, with 300 ms ease-out zoom transitions and a reduced-motion alternative. Mobile vertical gestures remain native.
 
-Type is TikTok Sans, 12 px, weight 300, with automatic optical sizing. Flexoki light/dark colors follow the system. Titles, captions and credits remain hidden while editorial copy is unfinished. EXIF is a separate visually hidden field, not a caption.
+Type is TikTok Sans, 12 px, weight 300, with automatic optical sizing, self-hosted in `public/assets/fonts/`. Flexoki light/dark colors follow the system. Titles, captions and credits remain hidden while editorial copy is unfinished. EXIF is a separate visually hidden field, not a caption.
 
 JPEG XL sources have WebP fallbacks. The pipeline exports widths up to 600/1200/2400 without upscaling, at quality 90. It skips HEIC/HEIF; convert those before upload. Current gallery inventory is derived from the manifest, not maintained here as a fixed count.
 
 ## Open source libraries and fonts
 - **Scritto** (`@scritto/core` v0.1.0, MIT) - the rolling-word preloader animation, vendored at `public/js/vendor/scritto.js` so the site has no runtime CDN dependency. https://github.com/JaceThings/Scritto
-- **TikTok Sans** (SIL Open Font License 1.1) - the site typeface, served as version-pinned `@fontsource-variable/tiktok-sans` 5.3.0 WOFF2 subsets via jsDelivr, declared in `public/css/fonts.css`. Font: https://github.com/tiktok/TikTokSans - Fontsource: https://fontsource.org/fonts/tiktok-sans
+- **TikTok Sans** (SIL Open Font License 1.1) - the site typeface, self-hosted in `public/assets/fonts/` as the version-pinned `@fontsource-variable/tiktok-sans` 5.3.0 WOFF2 subsets (OFL.txt alongside), declared in `public/css/fonts.css`. Font: https://github.com/tiktok/TikTokSans - Fontsource: https://fontsource.org/fonts/tiktok-sans
 - **serve** (MIT) - the local dev server behind `npm run dev`. https://github.com/vercel/serve
 
 Vercel Speed Insights and Web Analytics are platform scripts served by Vercel, not bundled libraries. Everything else in `public/js` and `public/css` is written for this site. The image pipeline's libraries are credited in the `originals` README.
@@ -44,6 +44,12 @@ The initial HTML contains the existing bio, contact and social links. JavaScript
 Canonical URL, social metadata, ProfilePage/Person JSON-LD, robots and sitemap use the main address. Social preview tags currently use the opening Pulse photo; update both tags if that asset is deleted. The sitemap currently lists only the homepage. Linked project pages and reviewed photo descriptions remain future editorial work. Search Console verification is not established by these files alone, and indexing is not guaranteed.
 
 Vercel Analytics and Speed Insights scripts are included. No Meta Pixel, GA4 or tag manager has been added. Check the Vercel dashboards for current collection/settings rather than inferring them from a script tag.
+
+## Caching and security headers
+
+`vercel.json` serves `/css/*` and `/js/*` with immutable year-long caching. The cache-busting scheme is the manual `?v=` query token: every css/js reference in `index.html` carries one (including the vendored scritto import inside `preloader.js`), so **bump the `?v=` token whenever you edit a file it points to**. The manifest and `site.json` get 60-second revalidation; image exports get one hour.
+
+The same file sets the security headers: a `self`-only Content-Security-Policy (all scripts are external files - keep it that way, or the CSP needs relaxing), Permissions-Policy, `X-Frame-Options: DENY`, `nosniff` and Referrer-Policy.
 
 ## Local checks and deployment
 

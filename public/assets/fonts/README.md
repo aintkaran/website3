@@ -2,7 +2,7 @@
 
 ## Active type
 
-The site uses TikTok Sans through `public/css/fonts.css`, with version-pinned Fontsource 5.3.0 WOFF2 subsets served from jsDelivr. The CSS declares weight 300-900 and optical-size support. The current page-wide settings in `public/css/caption.css` are 12 px, weight 300, with `font-optical-sizing: auto`.
+The site uses TikTok Sans through `public/css/fonts.css`, with the version-pinned Fontsource 5.3.0 WOFF2 subsets self-hosted in this folder (`tiktok-sans-latin-opsz-normal.woff2`, `tiktok-sans-latin-ext-opsz-normal.woff2`). The SIL Open Font License 1.1 text is `OFL.txt` here. The CSS declares weight 300-900 and optical-size support. The current page-wide settings in `public/css/caption.css` are 12 px, weight 300, with `font-optical-sizing: auto`.
 
 The font's license source is linked in `public/css/fonts.css`: https://github.com/tiktok/TikTokSans/blob/main/OFL.txt . Keep those source/license references with future font changes.
 
