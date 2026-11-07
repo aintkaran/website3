@@ -207,7 +207,11 @@ async function init() {
 
 function wire(items, figs, restyle) {
   const N = items.length;
-  const max = () => vp.scrollWidth - vp.clientWidth;
+  /* Cached in measure() (which runs on every resize): reading scrollWidth
+     on every wheel event and drag step forces layout work for a value that
+     only changes with geometry. */
+  let maxScroll = 0;
+  const max = () => maxScroll;
   const clamp = v => Math.max(0, Math.min(max(), v));
   const centreOf = f => f.offsetLeft + f.offsetWidth / 2 - vp.clientWidth / 2;
   /* One copy's width: positions exactly this far apart render identical
@@ -219,6 +223,7 @@ function wire(items, figs, restyle) {
   const measure = () => {
     cs = figs.map(f => f.offsetLeft + f.offsetWidth / 2);
     copyWidth = figs[N].offsetLeft - figs[0].offsetLeft;
+    maxScroll = vp.scrollWidth - vp.clientWidth;
   };
   measure();
 
