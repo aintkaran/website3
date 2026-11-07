@@ -42,6 +42,12 @@
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFCF0">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#100F0F">
 <meta name="description" content="aintkaran is the portfolio of Karan, a multi-disciplinary creative in Mumbai - photography, design, business, media, tech. Currently at Vitamin Studios.">
+<!-- Critical-path preloads: the gallery's data, the opening photo (same
+     pulse/1-_MG_6955 WebP set as og:image) and the preloader modules. -->
+<link rel="preload" as="fetch" href="assets/projects/manifest.json" crossorigin>
+<link rel="preload" as="image" href="assets/projects/pulse/web/1-_MG_6955-1200.webp" imagesrcset="assets/projects/pulse/web/1-_MG_6955-600.webp 600w, assets/projects/pulse/web/1-_MG_6955-1200.webp 1200w" imagesizes="(max-width: 640px) 62vw, 52vw">
+<link rel="modulepreload" href="js/preloader.js?v=2">
+<link rel="modulepreload" href="js/vendor/scritto.js">
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/caption.css">
 <link rel="stylesheet" href="css/style.css?v=12">
