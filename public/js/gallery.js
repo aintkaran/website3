@@ -262,11 +262,33 @@ function wire(items, figs, restyle) {
      units: 1.0 at the centre, NEIGHBOUR one slot away, smoothly interpolated
      with scroll progress, so the leaving image shrinks while the arriving
      one grows. */
+  /* Only figures within about one viewport width of the centre get
+     per-frame scale work. Anything further is fully off-screen (the widest
+     figure is capped at ~0.52 viewport widths, so nothing past one full
+     width can peek in), and the formula already gives it exactly NEIGHBOUR
+     with the same origin rule - the culled write is pixel-identical and
+     happens once per figure, not on every scroll event. Writes are skipped
+     when the computed value has not changed. */
+  const culled = new Array(figs.length).fill(false);
+  const lastTf = new Array(figs.length).fill('');
+  const lastOrg = new Array(figs.length).fill('');
   const applyScale = () => {
     if (cs.length !== figs.length) measure();
     const c = vp.scrollLeft + vp.clientWidth / 2;
+    const range = vp.clientWidth;
     for (let k = 0; k < figs.length; k++) {
       const fc = cs[k];
+      if (Math.abs(fc - c) > range) {
+        if (!culled[k]) {
+          culled[k] = true;
+          const org = fc >= c ? '0% 50%' : '100% 50%';
+          const tf = 'scale(' + NEIGHBOUR + ')';
+          figs[k].style.transformOrigin = lastOrg[k] = org;
+          figs[k].style.transform = lastTf[k] = tf;
+        }
+        continue;
+      }
+      culled[k] = false;
       const pitch = fc >= c
         ? (k > 0 ? fc - cs[k - 1] : cs[k + 1] - fc)
         : (k < figs.length - 1 ? cs[k + 1] - fc : fc - cs[k - 1]);
@@ -276,8 +298,10 @@ function wire(items, figs, restyle) {
          instead of pulling away from it, so the side previews survive on
          narrow screens too. The origin flips at the centre, where the
          scale is 1, so the flip itself is invisible. */
-      figs[k].style.transformOrigin = fc >= c ? '0% 50%' : '100% 50%';
-      figs[k].style.transform = 'scale(' + (1 - (1 - NEIGHBOUR) * t).toFixed(4) + ')';
+      const org = fc >= c ? '0% 50%' : '100% 50%';
+      const tf = 'scale(' + (1 - (1 - NEIGHBOUR) * t).toFixed(4) + ')';
+      if (org !== lastOrg[k]) figs[k].style.transformOrigin = lastOrg[k] = org;
+      if (tf !== lastTf[k]) figs[k].style.transform = lastTf[k] = tf;
     }
   };
 
