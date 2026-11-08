@@ -7,6 +7,7 @@ Serve `public/` over HTTP (`npm run dev`) and test in a browser. This repo has n
 - Start a mouse drag, release outside the gallery, then hover and scroll. The image must not follow an unpressed mouse. Repeat after switching tabs or windows during a drag. Wheel input must cancel any stale pointer hold.
 - Drag while the wheel glide is still running. Only the current drag should own movement. Releasing the mouse must stop dragging.
 - On a touch screen, horizontal drags move the strip (no snapping); vertical swipes keep their native behaviour (rubber-banding, pull-to-refresh).
+- iOS Safari owns a horizontal drag only through the native touch path (`touchmove` + `preventDefault`), never through `touch-action` alone: WebKit can take horizontal pans on `pan-y` elements over natively (bugs.webkit.org 232545). No synthetic event in any engine reproduces that takeover - confirm on a physical iPhone.
 - Use left/right arrows repeatedly through both loop seams. Resize between desktop and narrow widths, then repeat. All three copies must have equal geometry after each resize and every photo must remain accessible.
 - Turn on reduced motion before loading. Arrows and vertical wheel input must still move the gallery, immediately and without easing.
 - Open an image, close with Escape or click, and reopen. A JXL-capable browser should request JXL in the enlarged view too. Other browsers must load the WebP fallback. Scrolling must resume after close.
