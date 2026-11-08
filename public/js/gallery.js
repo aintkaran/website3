@@ -435,6 +435,28 @@ function wire(items, figs, resizeFigures) {
     vp.dataset.touched = '1';
   }, { passive: true });
 
+  /* Native touch events mirror the pointer path above: every iOS version
+     fires them, even where pointer events misbehave. When both fire (modern
+     iOS: pointerdown then touchstart) the touch path takes over (its anchor
+     replaces the pointer one) and the pointermove handler then ignores the
+     gesture (id mismatch) - both compute the same destination anyway.
+     preventDefault on the move (horizontal gestures only; vertical stays
+     native for pull-to-refresh) keeps the drag script-owned on every Safari:
+     touch-action: pan-y alone cannot be trusted to, because WebKit's
+     directional pan handling can still take a horizontal drag over natively
+     (bugs.webkit.org bug 232545, still open). Two-finger gestures (pinch)
+     are left to the browser. */
+  document.addEventListener('touchstart', e => {
+    if (dlg.open || e.touches.length !== 1) return;
+    const t = e.touches[0];
+    stop();
+    target = vp.scrollLeft;
+    down = { x: t.clientX, y: t.clientY, s: vp.scrollLeft, t0: vp.scrollLeft, id: 'touch', touch: true };
+    moved = 0;
+    suppressClick = false;
+    vp.dataset.touched = '1';
+  }, { passive: true });
+
   /* Recent drag samples, for flick velocity at release. */
   const sample = dx => {
     if (!down) return;
@@ -442,12 +464,36 @@ function wire(items, figs, resizeFigures) {
     if (down.sp.length > 5) down.sp.shift();
   };
 
+  document.addEventListener('touchmove', e => {
+    if (!down || down.id !== 'touch') return;
+    if (e.touches.length !== 1) { endDrag(); return; }
+    const t = e.touches[0];
+    const dx = t.clientX - down.x, dy = t.clientY - down.y;
+    moved = Math.max(moved, Math.abs(dx), Math.abs(dy));
+    /* Axis ownership, decided once past the tap slop: vertical stays
+       native (pull-to-refresh); only horizontal drives the strip. */
+    if (!down.axis) {
+      if (moved <= 8) return;
+      down.axis = Math.abs(dx) >= Math.abs(dy) ? 'h' : 'v';
+      if (down.axis === 'v') { endDrag(); return; }
+    }
+    if (down.axis !== 'h') return;
+    e.preventDefault();
+    sample(dx);
+    vp.classList.add('drag');
+    target = clamp(down.t0 - dx);
+    kick();
+  }, { passive: false });
+  /* Lazy wrappers: endDrag is declared further below (const, TDZ). */
+  document.addEventListener('touchend', () => endDrag());
+  document.addEventListener('touchcancel', () => endDrag());
+
   /* One Pointer Events move path for both drag kinds. Touch: horizontal
      ownership past the 8px slop, velocity-sampled for the fling, eased by
-     the wheel's glide. Mouse: direct 1:1 movement, captured once it is a
-     real drag so a plain click still reaches the img (click-to-zoom).
-     Nothing here calls preventDefault - touch-action: pan-y in CSS owns
-     the native/scripted split for touch. */
+     the wheel's glide - a fallback for touch environments without native
+     touch events (iOS always fires them, so the touchmove path above owns
+     those drags). Mouse: direct 1:1 movement, captured once it is a real
+     drag so a plain click still reaches the img (click-to-zoom). */
   document.addEventListener('pointermove', e => {
     if (!down || e.pointerId !== down.id) return;
     const dx = e.clientX - down.x, dy = e.clientY - down.y;
@@ -488,7 +534,7 @@ function wire(items, figs, resizeFigures) {
     const id = down.id, wasTouch = !!down.touch, axis = down.axis, sp = down.sp;
     down = null;
     if (moved > 4) suppressClick = true;
-    if (vp.hasPointerCapture(id)) vp.releasePointerCapture(id);
+    if (id !== 'touch' && vp.hasPointerCapture(id)) vp.releasePointerCapture(id);
     vp.classList.remove('drag');
     /* Touch fling, horizontal gestures only, purely velocity-based: a
        fast flick keeps floating after the finger lifts (a couple of image
