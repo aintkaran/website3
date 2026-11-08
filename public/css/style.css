@@ -178,19 +178,11 @@ a:focus-visible, button:focus-visible {
   touch-action: pan-y; /* only horizontal touch drags are handled in
                           gallery.js; vertical stays native for pull-to-refresh */
   touch-action: pan-y pinch-zoom; /* ignored where unsupported; pan-y then applies */
-  outline: none; /* mouse-driven strip: a focus ring here paints 1px lines
-                    across the page in Safari after zoom - arrows work globally.
-                    Keyboard focus still gets a ring via :focus-visible below. */
+  outline: none; /* Keep the gallery borderless for all input methods.
+                    Keyboard arrows, zoom and the skip link still work. */
 }
 .viewport::-webkit-scrollbar { display: none; }
 .viewport.drag { cursor: grabbing; }
-/* Keyboard focus - the skip link jumps here - gets the same outline as
-   links. Plain mouse/touch interaction still paints no ring (the note on
-   .viewport above), because :focus-visible does not match for it. */
-.viewport:focus-visible {
-  outline: 1px solid var(--tx);
-  outline-offset: 3px;
-}
 
 .track {
   display: flex;
